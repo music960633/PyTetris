@@ -9,10 +9,15 @@ class Field:
     self.w_offset = w_offset
     self.h_offset = h_offset
     self.mino_initpos = (self.width/2-1, self.height-1)
+    self.next_size = 3
     self.restart()
 
   def restart(self):
     self.frame  = pygame.Rect(self.w_offset-1, self.h_offset-1, self.width*BLOCK_WIDTH+2, self.height*BLOCK_WIDTH+2)
+    self.hold_frame = pygame.Rect(self.w_offset-4*BLOCK_WIDTH-3, self.h_offset-1, 4*BLOCK_WIDTH+2, 4*BLOCK_WIDTH+2)
+    self.next_frame = [ \
+        pygame.Rect(self.w_offset+self.width*BLOCK_WIDTH+2, self.h_offset-1+i*(4*BLOCK_WIDTH+2), 4*BLOCK_WIDTH+2, 4*BLOCK_WIDTH+2) \
+        for i in range(self.next_size) ]
     self.blocks = [[        \
       {                     \
         "occupied": False,  \
@@ -22,7 +27,7 @@ class Field:
       for j in range(self.height)] for i in range(self.width)]
     
     self.generator = Generator()
-    self.nextminos = [self.generator.next_mino() for x in range(3)]
+    self.nextminos = [self.generator.next_mino() for x in range(self.next_size)]
     self.mino = self.pop_nextmino()
     self.holdflag = True
     self.hold = None
@@ -84,16 +89,20 @@ class Field:
 
   # draw the hold piece
   def drawHold(self, surface):
+    pygame.draw.rect(surface, WHITE, self.hold_frame, 1)
+    cx, cy = self.hold_frame.center
     if self.hold is not None:
       for x, y in self.hold.get_pos():
-        surface.blit(self.hold.pattern, self.transform((x - 3, y + 16)))
+        surface.blit(self.hold.pattern, (cx + (x-1)*BLOCK_WIDTH, cy + (-y)*BLOCK_WIDTH))
   
   # draw the next pieces
   def drawNext(self, surface):
-    for i in range(len(self.nextminos)):
+    for i in range(self.next_size):
+      pygame.draw.rect(surface, WHITE, self.next_frame[i], 1)
+      cx, cy = self.next_frame[i].center
       nextmino = self.nextminos[i]
       for x, y in nextmino.get_pos():
-        surface.blit(nextmino.pattern, self.transform((x + self.width + 3, y + 16 - 4*i)))
+        surface.blit(nextmino.pattern, (cx + (x-1)*BLOCK_WIDTH, cy + (-y)*BLOCK_WIDTH))
 
   # clear line effect (blocking)
   def FX_clearLine(self, surface):
