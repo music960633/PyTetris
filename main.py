@@ -3,6 +3,7 @@ from field import *
 from control import check_event
 
 def main():
+  pygame.init()
   screen = pygame.display.set_mode(SCREEN_SIZE)
   clock = pygame.time.Clock()
   field = Field(10, 20, 150, 20)

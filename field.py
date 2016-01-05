@@ -10,7 +10,7 @@ class Field:
     self.w_offset = w_offset
     self.h_offset = h_offset
     self.mino_initpos = (self.width/2-1, self.height-1)
-    self.next_size = 3
+    self.next_size = 5
     # TODO: these lines should be fixed, so ugly QQ
     self.frame  = pygame.Rect(self.w_offset-1, self.h_offset-1, self.width*BLOCK_WIDTH+2, self.height*BLOCK_WIDTH+2)
     self.hold_frame = pygame.Rect(self.w_offset-4*BLOCK_WIDTH-6, self.h_offset-1, 4*BLOCK_WIDTH+2, 4*BLOCK_WIDTH+2)
@@ -34,6 +34,8 @@ class Field:
     self.mino = self.pop_nextmino()
     self.holdflag = True
     self.hold = None
+
+    self.linecount = 0
 
     self.clear_row = []
     self.clear_effect = 0
@@ -64,6 +66,7 @@ class Field:
     self.drawMino(surface)
     self.drawHold(surface)
     self.drawNext(surface)
+    self.drawStatus(surface)
 
     self.FX_clearLine(surface)
   
@@ -109,6 +112,11 @@ class Field:
       for x, y in nextmino.get_pos():
         surface.blit(nextmino.pattern, (int(fx + (x-cx-0.5)*BLOCK_WIDTH), int(fy + (-y+cy-0.5)*BLOCK_WIDTH)))
 
+  def drawStatus(self, surface):
+    f = pygame.font.SysFont("monospace", 16)
+    status = f.render("%3d lines" % self.linecount, 2, WHITE)
+    surface.blit(status, (45, 300))
+
   # clear line effect (blocking)
   def FX_clearLine(self, surface):
     if self.clear_effect <= 0: return
@@ -153,7 +161,7 @@ class Field:
         self.blocks[x][y]["occupied"] = True
         if self.invisible == False:
           self.blocks[x][y]["pattern"] = self.mino.pattern
-    self.clearAllLine()
+    self.linecount += self.clearAllLine()
     self.mino = self.pop_nextmino()
     self.holdflag = True
 
@@ -174,10 +182,13 @@ class Field:
   # clear all lines
   def clearAllLine(self):
     if self.pause(): return
+    count = 0
     for row in range(self.height-1, -1, -1):
       if self.checkLine(row):
         self.clear_row.append(row)
         self.clear_effect = 200
+        count += 1
+    return count
   
   # check if the row should be cleared
   def checkLine(self, row):
