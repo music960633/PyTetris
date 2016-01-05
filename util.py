@@ -2,8 +2,8 @@ import pygame
 from defines import *
 
 # returns a colored block surface
-def make_surface(color):
-  surface = pygame.Surface(BLOCK_SIZE)
+def make_surface(color, size = BLOCK_SIZE):
+  surface = pygame.Surface(size)
   surface.fill(color)
   return surface
 

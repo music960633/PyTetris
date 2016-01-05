@@ -1,6 +1,6 @@
 import pygame
 from mino import *
-from util import find_center
+from util import *
 
 '''   class Field definition   '''
 class Field:
@@ -13,8 +13,8 @@ class Field:
     self.next_size = 5
     # TODO: these lines should be fixed, so ugly QQ
     self.frame  = pygame.Rect(self.w_offset-1, self.h_offset-1, self.width*BLOCK_WIDTH+2, self.height*BLOCK_WIDTH+2)
-    self.hold_frame = pygame.Rect(self.w_offset-4*BLOCK_WIDTH-6, self.h_offset-1, 4*BLOCK_WIDTH+2, 4*BLOCK_WIDTH+2)
-    self.next_frame = [ pygame.Rect(self.w_offset+self.width*BLOCK_WIDTH+4, self.h_offset-1+i*(4*BLOCK_WIDTH+6), 4*BLOCK_WIDTH+2, 4*BLOCK_WIDTH+2) for i in range(self.next_size) ]
+    self.hold_frame = pygame.Rect(self.w_offset-4*BLOCK_WIDTH-20, self.h_offset-1, 4*BLOCK_WIDTH+2, 4*BLOCK_WIDTH+2)
+    self.next_frame = [ pygame.Rect(self.w_offset+self.width*BLOCK_WIDTH+18, self.h_offset-1+i*(4*BLOCK_WIDTH+6), 4*BLOCK_WIDTH+2, 4*BLOCK_WIDTH+2) for i in range(self.next_size) ]
 
     self.invisible = False
     self.restart()
@@ -34,6 +34,7 @@ class Field:
     self.mino = self.pop_nextmino()
     self.holdflag = True
     self.hold = None
+    self.atk_buffer = []
 
     self.linecount = 0
 
@@ -66,6 +67,7 @@ class Field:
     self.drawMino(surface)
     self.drawHold(surface)
     self.drawNext(surface)
+    self.drawBuffer(surface)
     self.drawStatus(surface)
 
     self.FX_clearLine(surface)
@@ -112,6 +114,12 @@ class Field:
       for x, y in nextmino.get_pos():
         surface.blit(nextmino.pattern, (int(fx + (x-cx-0.5)*BLOCK_WIDTH), int(fy + (-y+cy-0.5)*BLOCK_WIDTH)))
 
+  def drawBuffer(self, surface):
+    buffer_sum = sum(self.atk_buffer)
+    for i in range(min(buffer_sum, self.height)):
+      bar = make_surface(RED, (10, BLOCK_WIDTH))
+      surface.blit(bar, (self.w_offset+self.width*BLOCK_WIDTH+5, self.h_offset+(self.height-i-1)*BLOCK_WIDTH))
+  
   def drawStatus(self, surface):
     f = pygame.font.SysFont("Consolas", 30)
     status = f.render("%3d lines" % self.linecount, 2, WHITE)
@@ -161,7 +169,12 @@ class Field:
         self.blocks[x][y]["occupied"] = True
         if self.invisible == False:
           self.blocks[x][y]["pattern"] = self.mino.pattern
-    self.linecount += self.clearAllLine()
+    clear_count = self.clearAllLine()
+    if clear_count == 0:
+      self.clearAttack()
+    else:
+      self.linecount += clear_count
+      self.cancelAttack(self.sendAttack(clear_count))
     self.mino = self.pop_nextmino()
     self.holdflag = True
 
@@ -208,4 +221,42 @@ class Field:
           self.blocks[i][j]["occupied"] = self.blocks[i][j+1]["occupied"]
           self.blocks[i][j]["pattern"] = self.blocks[i][j+1]["pattern"]
     return True
+  
+  # recieve line (add to buffer)
+  def recieveAttack(self, atk):
+    self.atk_buffer.append(atk)
 
+  # push line and clear buffer
+  def clearAttack(self):
+    for atk in self.atk_buffer:
+      hole = random.randint(0, self.width-1)
+      for j in range(self.height-1, -1, -1):
+        for i in range(self.width):
+          if j >= atk:
+            self.blocks[i][j]["occupied"] = self.blocks[i][j-atk]["occupied"]
+            self.blocks[i][j]["pattern"] = self.blocks[i][j-atk]["pattern"]
+          else:
+            self.blocks[i][j]["occupied"] = False if i == hole else True
+            self.blocks[i][j]["pattern"] = None if i == hole else make_surface(SILVER)
+    self.atk_buffer = []
+
+  # cancel attack
+  def cancelAttack(self, val):
+    while len(self.atk_buffer) > 0 and val > 0:
+      atk = self.atk_buffer[-1]
+      self.atk_buffer.pop()
+      if val >= atk:
+        val -= atk
+      else:
+        self.atk_buffer.append(atk - val)
+        val = 0
+    return val
+
+  # send attack
+  def sendAttack(self, line):
+    if line == 0: return 0
+    elif line == 1: return 0
+    elif line == 2: return 1
+    elif line == 3: return 2
+    elif line == 4: return 4
+    else: return 0

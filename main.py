@@ -1,4 +1,5 @@
 import pygame
+import random
 from field import *
 from control import check_event
 
@@ -8,7 +9,13 @@ def main():
   clock = pygame.time.Clock()
   field = Field(10, 20, 150, 20)
 
+  cnt = 0
+
   while True:
+    if cnt % 400 == 0:
+      field.recieveAttack(random.randint(1, 4))
+    cnt += 1
+
     check_event(field)
     screen.fill(BLACK)
     field.draw(screen)
