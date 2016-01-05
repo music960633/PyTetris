@@ -1,6 +1,18 @@
 A Tetris game based on PyGame
 
-Game Control:
+How to play
+
+   First, you need to install Python and PyGame. 
+   
+   PyGame downloads: http://www.pygame.org/download.shtml
+   
+   Then, type the command to execute
+   
+   "python main.py"
+
+
+Game Control
+
    left arrow  : move left
    right arrow : move right
    down arrow  : soft drop
@@ -11,7 +23,9 @@ Game Control:
    C           : hold
    F2          : restart
 
-Current status:
+
+Current status
+
    basic game features (move, turn, clear line, hold, next pieces)
    basic GUI (quite bad)
    SRS (super rotation system)
