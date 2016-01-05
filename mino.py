@@ -23,21 +23,17 @@ class Mino:
   def get_pos(self):
     return [(x+self.center[0], y+self.center[1]) for x, y in self.pos]
   
-  # move the center do not check any boundaries)
-  def moveto(self, center):
-    self.center = center
-  
   # move the mino, return False if fails
-  def move(self, (dirx, diry), field):
+  def move(self, (dirx, diry), field = None):
     next_center = (self.center[0] + dirx, self.center[1] + diry)
     abs_pos = [(x + next_center[0], y + next_center[1]) for x, y in self.pos]
-    if field.check_valid(abs_pos):
+    if field == None or field.check_valid(abs_pos):
       self.center = next_center
       return True
     return False
 
   # turn the mino, return False if fails
-  def turn(self, rev, field):
+  def turn(self, rev, field = None):
     if not self.turn_enable: return False
     if not rev:
       next_orientation = (self.orientation + 1) % 4
@@ -50,10 +46,19 @@ class Mino:
     for test_x, test_y in test_table:
       next_center = (self.center[0] + test_x, self.center[1] + test_y)
       abs_pos = [(next_center[0] + x, next_center[1] + y) for x, y in next_pos]
-      if field.check_valid(abs_pos):
+      if field == None or field.check_valid(abs_pos):
         self.center, self.orientation, self.pos = next_center, next_orientation, next_pos
         return True
     return False
+  
+  # move the center do not check any boundaries
+  def moveto(self, center):
+    self.center = center
+
+  def turnto(self, orientation):
+    assert 0 <= orientation < 4, "orientation is not 0~3"
+    while self.orientation != orientation:
+      self.turn(False)
 
   # returns a ghost piece
   def ghost(self, field):

@@ -157,6 +157,7 @@ class Field:
       tmp = self.hold
       self.hold = self.mino
       self.hold.moveto((0, 0))
+      self.hold.turnto(0)
       self.mino = tmp
       if self.mino == None:
         self.mino = self.pop_nextmino()
