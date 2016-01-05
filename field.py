@@ -22,8 +22,8 @@ class Field:
       for j in range(self.height)] for i in range(self.width)]
     
     self.generator = Generator()
-    self.mino = self.generator.next_mino(self.mino_initpos)
-    self.nextminos = [self.generator.next_mino(self.mino_initpos) for x in range(3)]
+    self.nextminos = [self.generator.next_mino() for x in range(3)]
+    self.mino = self.pop_nextmino()
     self.holdflag = True
     self.hold = None
 
@@ -41,6 +41,14 @@ class Field:
   # returns a 2D array containing only True or False
   def get_map(self):
     return [[self.blocks["occupied"] for j in range(self.width)] for i in range(self.height)]
+
+  # get a new mino from the next queue
+  def pop_nextmino(self):
+    nextmino = self.nextminos[0]
+    nextmino.moveto(self.mino_initpos)
+    self.nextminos = self.nextminos[1:]
+    self.nextminos.append(self.generator.next_mino())
+    return nextmino
 
   # draw everything
   def draw(self, surface):
@@ -78,14 +86,14 @@ class Field:
   def drawHold(self, surface):
     if self.hold is not None:
       for x, y in self.hold.get_pos():
-        surface.blit(self.hold.pattern, self.transform((x - self.width/2 - 3, y - 4)))
+        surface.blit(self.hold.pattern, self.transform((x - 3, y + 16)))
   
   # draw the next pieces
   def drawNext(self, surface):
     for i in range(len(self.nextminos)):
       nextmino = self.nextminos[i]
       for x, y in nextmino.get_pos():
-        surface.blit(nextmino.pattern, self.transform((x + self.width/2 + 3, y - 4*i - 4)))
+        surface.blit(nextmino.pattern, self.transform((x + self.width + 3, y + 16 - 4*i)))
 
   # clear line effect (blocking)
   def FX_clearLine(self, surface):
@@ -139,10 +147,12 @@ class Field:
     if self.holdflag == True:
       tmp = self.hold
       self.hold = self.mino
-      self.hold.moveto(self.mino_initpos)
+      self.hold.moveto((0, 0))
       self.mino = tmp
       if self.mino == None:
         self.mino = self.pop_nextmino()
+      else:
+        self.mino.moveto(self.mino_initpos)
       self.holdflag = False
       
   # clear all lines
@@ -171,12 +181,4 @@ class Field:
           self.blocks[i][j]["occupied"] = self.blocks[i][j+1]["occupied"]
           self.blocks[i][j]["pattern"] = self.blocks[i][j+1]["pattern"]
     return True
-
-  # get a new mino from the next queue
-  def pop_nextmino(self):
-    nextmino = self.nextminos[0]
-    size = len(self.nextminos)
-    self.nextminos = self.nextminos[1:]
-    self.nextminos.append(self.generator.next_mino(self.mino_initpos))
-    return nextmino
 

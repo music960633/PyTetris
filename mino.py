@@ -184,7 +184,7 @@ class Generator:
     self.idx = [x for x in range(len(self.minos))]
     random.shuffle(self.idx)
 
-  def next_mino(self, center):
+  def next_mino(self, center = (0, 0)):
     mino = self.minos[self.idx[0]](center)
     self.idx = self.idx[1:]
     if len(self.idx) == 0:
