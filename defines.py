@@ -1,5 +1,3 @@
-import pygame
-
 '''   size parameters   '''
 SCREEN_WIDTH  = 500
 SCREEN_HEIGHT = 500
@@ -20,8 +18,3 @@ MAGENTA = (255,   0, 255)
 ORANGE  = (255, 140,   0)
 GHOST   = (100, 100, 100)
 
-# returns a colored block surface
-def make_surface(color):
-  surface = pygame.Surface(BLOCK_SIZE)
-  surface.fill(color)
-  return surface

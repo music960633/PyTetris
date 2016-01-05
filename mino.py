@@ -1,6 +1,7 @@
 import pygame
 import random
 from defines import *
+from util import make_surface
 
 '''   class Mino definition   '''
 class Mino:
