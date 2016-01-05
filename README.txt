@@ -29,5 +29,5 @@ Current status
 
    basic game features (move, turn, clear line, hold, next pieces)
    basic GUI (quite bad)
-   SRS (super rotation system)
+   Arika SRS
    clear line effect
