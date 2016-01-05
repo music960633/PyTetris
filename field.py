@@ -113,9 +113,9 @@ class Field:
         surface.blit(nextmino.pattern, (int(fx + (x-cx-0.5)*BLOCK_WIDTH), int(fy + (-y+cy-0.5)*BLOCK_WIDTH)))
 
   def drawStatus(self, surface):
-    f = pygame.font.SysFont("monospace", 16)
+    f = pygame.font.SysFont("Consolas", 30)
     status = f.render("%3d lines" % self.linecount, 2, WHITE)
-    surface.blit(status, (45, 300))
+    surface.blit(status, (55, 300))
 
   # clear line effect (blocking)
   def FX_clearLine(self, surface):
