@@ -6,6 +6,7 @@ Game Control:
    down arrow  : soft drop
    space       : harddrop
    up arrow    : spin clockwise
+   X           : spin clockwise (same as up arrow)
    Z           : spin counter-clockwise
    C           : hold
    F2          : restart

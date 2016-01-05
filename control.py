@@ -4,26 +4,28 @@ from pygame.locals import *
 
 # keypress counter
 count = {
-    K_LEFT : 0,
-    K_RIGHT: 0,
-    K_UP   : 0,
-    K_DOWN : 0,
-    K_z    : 0,
-    K_SPACE: 0,
-    K_c    : 0,
-    K_F2   : 0,
+    K_LEFT  : 0,
+    K_RIGHT : 0,
+    K_DOWN  : 0,
+    K_UP    : 0,
+    K_x     : 0,
+    K_z     : 0,
+    K_SPACE : 0,
+    K_c     : 0,
+    K_F2    : 0,
 }
 
 # counter threshold, used as DAS (delay auto shift)
 threshold = {
-    K_DOWN : 0,
-    K_LEFT : 17,
-    K_RIGHT: 17,
-    K_UP   : 1e10,
-    K_z    : 1e10,
-    K_SPACE: 1e10,
-    K_c    : 1e10,
-    K_F2   : 1e10
+    K_LEFT  : 17,
+    K_RIGHT : 17,
+    K_DOWN  : 0,
+    K_UP    : 1e10,
+    K_x     : 1e10,
+    K_z     : 1e10,
+    K_SPACE : 1e10,
+    K_c     : 1e10,
+    K_F2    : 1e10
 }
 
 # call functions corresponding to the key
@@ -35,6 +37,8 @@ def execute(field, key):
   elif key == K_DOWN:
     field.moveMino((0, -1))
   elif key == K_UP:
+    field.turnMino(False)
+  elif key == K_x:
     field.turnMino(False)
   elif key == K_z:
     field.turnMino(True)
