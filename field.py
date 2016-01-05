@@ -11,14 +11,16 @@ class Field:
     self.h_offset = h_offset
     self.mino_initpos = (self.width/2-1, self.height-1)
     self.next_size = 3
-    self.restart()
-
-  def restart(self):
+    # TODO: these lines should be fixed, so ugly QQ
     self.frame  = pygame.Rect(self.w_offset-1, self.h_offset-1, self.width*BLOCK_WIDTH+2, self.height*BLOCK_WIDTH+2)
     self.hold_frame = pygame.Rect(self.w_offset-4*BLOCK_WIDTH-6, self.h_offset-1, 4*BLOCK_WIDTH+2, 4*BLOCK_WIDTH+2)
-    self.next_frame = [ \
-        pygame.Rect(self.w_offset+self.width*BLOCK_WIDTH+4, self.h_offset-1+i*(4*BLOCK_WIDTH+6), 4*BLOCK_WIDTH+2, 4*BLOCK_WIDTH+2) \
-        for i in range(self.next_size) ]
+    self.next_frame = [ pygame.Rect(self.w_offset+self.width*BLOCK_WIDTH+4, self.h_offset-1+i*(4*BLOCK_WIDTH+6), 4*BLOCK_WIDTH+2, 4*BLOCK_WIDTH+2) for i in range(self.next_size) ]
+
+    self.invisible = False
+    self.restart()
+
+  def restart(self, invisible = False):
+    self.invisible = invisible
     self.blocks = [[        \
       {                     \
         "occupied": False,  \
@@ -149,7 +151,8 @@ class Field:
     for x, y in self.mino.get_pos():
       if self.check_inside((x, y)):
         self.blocks[x][y]["occupied"] = True
-        self.blocks[x][y]["pattern"] = self.mino.pattern
+        if self.invisible == False:
+          self.blocks[x][y]["pattern"] = self.mino.pattern
     self.clearAllLine()
     self.mino = self.pop_nextmino()
     self.holdflag = True

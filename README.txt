@@ -22,6 +22,7 @@ Game Control
    Z           : spin counter-clockwise
    C           : hold
    F2          : restart
+   F3          : restart (invisible mode)
 
 
 Current status

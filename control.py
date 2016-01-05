@@ -13,6 +13,7 @@ count = {
     K_SPACE : 0,
     K_c     : 0,
     K_F2    : 0,
+    K_F3    : 0
 }
 
 # counter threshold, used as DAS (delay auto shift)
@@ -25,7 +26,8 @@ threshold = {
     K_z     : 1e10,
     K_SPACE : 1e10,
     K_c     : 1e10,
-    K_F2    : 1e10
+    K_F2    : 1e10,
+    K_F3    : 1e10
 }
 
 # call functions corresponding to the key
@@ -47,7 +49,9 @@ def execute(field, key):
   elif key == K_c:
     field.holdMino()
   elif key == K_F2:
-    field.restart()
+    field.restart(invisible = False)
+  elif key == K_F3:
+    field.restart(invisible = True)
 
 # check events
 def check_event(field):
