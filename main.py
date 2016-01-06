@@ -5,6 +5,7 @@ from control import check_event
 
 def main():
   pygame.init()
+  pygame.display.set_caption("PyTetris")
   screen = pygame.display.set_mode(SCREEN_SIZE)
   clock = pygame.time.Clock()
   field = Field(10, 20)
