@@ -12,7 +12,7 @@ count = {
     K_z     : 0,
     K_SPACE : 0,
     K_c     : 0,
-    K_F2    : 0,
+    K_r     : 0,
     K_q     : 0
 }
 
@@ -26,7 +26,7 @@ threshold = {
     K_z     : 1e10,
     K_SPACE : 1e10,
     K_c     : 1e10,
-    K_F2    : 1e10,
+    K_r     : 1e10,
     K_q     : 1e10
 }
 
@@ -50,7 +50,7 @@ def execute(field, key):
     field.dropMino()
   elif key == K_c:
     field.holdMino()
-  elif key == K_F2:
+  elif key == K_r:
     field.restart()
     restart = True
   elif key == K_q:
