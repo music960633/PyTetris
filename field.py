@@ -4,11 +4,9 @@ from util import *
 
 '''   class Field definition   '''
 class Field:
-  def __init__(self, width, height, w_offset=0, h_offset=0):
+  def __init__(self, width, height):
     self.width  = width
     self.height = height
-    self.w_offset = w_offset
-    self.h_offset = h_offset
     self.mino_initpos = (self.width/2-1, self.height-1)
     self.next_size = 5
 
