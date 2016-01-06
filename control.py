@@ -13,6 +13,7 @@ count = {
     K_SPACE : 0,
     K_c     : 0,
     K_F2    : 0,
+    K_q     : 0
 }
 
 # counter threshold, used as DAS (delay auto shift)
@@ -26,9 +27,11 @@ threshold = {
     K_SPACE : 1e10,
     K_c     : 1e10,
     K_F2    : 1e10,
+    K_q     : 1e10
 }
 
 # call functions corresponding to the key
+# returns True if need to exit
 def execute(field, key):
   if key == K_LEFT:
     field.moveMino((-1, 0))
@@ -48,25 +51,32 @@ def execute(field, key):
     field.holdMino()
   elif key == K_F2:
     field.restart()
+  elif key == K_q:
+    return True
+  return False
 
-# check events
+# check events, returns True if need to exit
 def check_event(field):
   for event in pygame.event.get():
     if event.type == pygame.QUIT: sys.exit()
+    '''
     elif event.type == pygame.KEYDOWN:
       if event.key in count:
         count[event.key] += 1
         if count[event.key] == 1 or count[event.key] > threshold[event.key]:
-          execute(field, event.key)
+          if execute(field, event.key):
+            return True
     elif event.type == pygame.KEYUP:
       if event.key in count:
         count[event.key] = 0
+    '''
 
   pressed = pygame.key.get_pressed()
   for key in count:
     if pressed[key] == 1:
       count[key] += 1
       if count[key] == 1 or count[key] > threshold[key]:
-        execute(field, key)
+        if execute(field, key): return True
     else:
       count[key] = 0
+  return False

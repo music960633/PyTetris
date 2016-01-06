@@ -12,8 +12,8 @@ class Game:
     self.field = Field(10, 20)
 
   def routine(self):
-    check_event(self.field)
     self.clock.tick(120)
+    return check_event(self.field)
 
 
 class Game1P(Game):
@@ -32,7 +32,8 @@ class Game1P(Game):
       self.screen.blit(self.field.draw(), (20, 20))
       pygame.display.flip()
       # routine work
-      Game.routine(self)
+      if Game.routine(self): return
+
 
 class GameInvisible(Game):
   def __init__(self, screen):
@@ -46,4 +47,4 @@ class GameInvisible(Game):
       self.screen.blit(self.field.draw(), (20, 20))
       pygame.display.flip()
       # routine work
-      Game.routine(self)
+      if Game.routine(self): return
