@@ -21,8 +21,7 @@ Game Control
    X           : spin clockwise (same as up arrow)
    Z           : spin counter-clockwise
    C           : hold
-   F2          : restart
-   F3          : restart (invisible mode)
+   R           : restart
 
 
 Current status
@@ -31,3 +30,14 @@ Current status
    basic GUI (quite bad)
    Arika SRS
    clear line effect
+   Game modes
+   ---1P with auto attack
+   ---1P with invisible blocks
+   ---1P 4-wide practice
+
+TODOs
+   
+   game over checking
+   attack calculation (combo, T-spin)
+   2P battle
+   other
