@@ -15,13 +15,10 @@ class Field:
 
   def restart(self, invisible = False):
     self.invisible = invisible
-    self.blocks = [[        \
-      {                     \
-        "occupied": False,  \
-        "pattern" : None,   \
-        "default" : make_surface(BLACK if (i+j) % 2 == 0 else GRAY) \
-      }                     \
-      for j in range(self.height)] for i in range(self.width)]
+    self.occupied = [[False]*self.height for i in range(self.width)]
+    self.pattern = [[None]*self.height for i in range(self.height)]
+    default_surface = [make_surface(BLACK), make_surface(GRAY)]
+    self.default = [[default_surface[(i+j) % 2] for j in range(self.height)] for i in range(self.height)]
     
     self.generator = Generator()
     self.nextminos = [self.generator.next_mino() for x in range(self.next_size)]
@@ -41,7 +38,7 @@ class Field:
 
   # returns a 2D array containing only True or False
   def get_map(self):
-    return [[self.blocks["occupied"] for j in range(self.width)] for i in range(self.height)]
+    return [[self.occupied[i][j] for j in range(self.width)] for i in range(self.height)]
 
   # get a new mino from the next queue
   def pop_nextmino(self):
@@ -83,11 +80,10 @@ class Field:
     # current map
     for i in range(self.width):
       for j in range(self.height):
-        block = self.blocks[i][j]
-        if block["pattern"] is not None:
-          surface.blit(block["pattern"], transform((i, j)))
+        if self.pattern[i][j] is not None:
+          surface.blit(self.pattern[i][j], transform((i, j)))
         else:
-          surface.blit(block["default"], transform((i, j)))
+          surface.blit(self.default[i][j], transform((i, j)))
     # ghost piece
     ghost = self.mino.ghost(self)
     for pos in ghost.get_pos():
@@ -170,7 +166,7 @@ class Field:
   def check_valid(self, posList):
     for x, y in posList:
       if x < 0 or x >= self.width or y < 0: return False
-      if y < self.height and self.blocks[x][y]["occupied"]: return False
+      if y < self.height and self.occupied[x][y]: return False
     return True
 
   # check if the coordinate is inside the boundary
@@ -193,9 +189,9 @@ class Field:
     while self.moveMino((0, -1)): pass
     for x, y in self.mino.get_pos():
       if self.check_inside((x, y)):
-        self.blocks[x][y]["occupied"] = True
+        self.occupied[x][y] = True
         if self.invisible == False:
-          self.blocks[x][y]["pattern"] = self.mino.pattern
+          self.pattern[x][y] = self.mino.pattern
     clear_count = self.clearAllLine()
     if clear_count == 0:
       self.clearAttack()
@@ -233,7 +229,7 @@ class Field:
   # check if the row should be cleared
   def checkLine(self, row):
     for i in range(self.width):
-      if not self.blocks[i][row]["occupied"]: 
+      if not self.occupied[i][row]: 
         return False
     return True 
 
@@ -242,11 +238,11 @@ class Field:
     for j in range(row, self.height):
       for i in range(self.width):
         if j == self.height - 1:
-          self.blocks[i][j]["occupied"] = False
-          self.blocks[i][j]["pattern"] = None
+          self.occupied[i][j] = False
+          self.pattern[i][j] = None
         else:
-          self.blocks[i][j]["occupied"] = self.blocks[i][j+1]["occupied"]
-          self.blocks[i][j]["pattern"] = self.blocks[i][j+1]["pattern"]
+          self.occupied[i][j] = self.occupied[i][j+1]
+          self.pattern[i][j] = self.pattern[i][j+1]
     return True
   
   # recieve line (add to buffer)
@@ -260,11 +256,11 @@ class Field:
       for j in range(self.height-1, -1, -1):
         for i in range(self.width):
           if j >= atk:
-            self.blocks[i][j]["occupied"] = self.blocks[i][j-atk]["occupied"]
-            self.blocks[i][j]["pattern"] = self.blocks[i][j-atk]["pattern"]
+            self.occupied[i][j] = self.occupied[i][j-atk]
+            self.pattern[i][j] = self.pattern[i][j-atk]
           else:
-            self.blocks[i][j]["occupied"] = False if i == hole else True
-            self.blocks[i][j]["pattern"] = None if i == hole else make_surface(SILVER)
+            self.occupied[i][j] = False if i == hole else True
+            self.pattern[i][j] = None if i == hole else make_surface(SILVER)
     self.atk_buffer = []
 
   # cancel attack
