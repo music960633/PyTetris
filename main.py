@@ -18,7 +18,7 @@ def main():
 
     check_event(field)
     screen.fill(BLACK)
-    field.draw(screen)
+    screen.blit(field.draw(), (20, 20))
     pygame.display.flip()
     clock.tick(120)
 

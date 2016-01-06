@@ -58,23 +58,29 @@ class Field:
     return nextmino
 
   # draw everything
-  def draw(self, surface):
+  def draw(self):
     s_grid = self.drawGrid(WHITE, 1)
     s_hold = self.drawHold(WHITE, 1)
     s_next = self.drawNext(WHITE, 1)
     s_buffer = self.drawBuffer(WHITE, 1)
     s_status = self.drawStatus(WHITE, 1)
+    w_grid, h_grid = s_grid.get_size()
+    w_hold, h_hold = s_hold.get_size()
+    w_next, h_next = s_hold.get_size()
+    w_buffer, h_buffer = s_buffer.get_size()
+
+    surface = pygame.Surface((w_hold + w_grid + w_buffer + w_next + 3*SPACE_WIDTH, max(h_grid, h_next)))
     
-    surface.blit(s_grid, (self.w_offset, self.h_offset))
-    surface.blit(s_hold, (self.w_offset-s_hold.get_width()-SPACE_WIDTH, self.h_offset))
+    surface.blit(s_hold, (0, 0))
+    surface.blit(s_grid, (w_hold + SPACE_WIDTH, 0))
+    surface.blit(s_buffer, (w_hold + w_grid + 2*SPACE_WIDTH, 0))
     sum_h = 0
     for i in range(self.next_size):
-      surface.blit(s_next[i], (self.w_offset+s_grid.get_width()+s_buffer.get_width()+2*SPACE_WIDTH, self.h_offset+sum_h))
+      surface.blit(s_next[i], (w_hold + w_grid + w_buffer + 3*SPACE_WIDTH, sum_h))
       sum_h += s_next[i].get_height() + SPACE_WIDTH
-    surface.blit(s_buffer, (self.w_offset+s_grid.get_width()+SPACE_WIDTH, self.h_offset))
-    surface.blit(s_status, (55, 300))
-    
-    self.FX_clearLine(surface)
+    surface.blit(s_status, (0, 300))
+
+    return surface
   
   # draw the grids
   def drawGrid(self, color, linewidth):
@@ -97,6 +103,17 @@ class Field:
     for pos in self.mino.get_pos():
       if self.check_inside(pos):
         surface.blit(self.mino.pattern, transform(pos))
+    # clear line effect
+    if self.clear_effect > 0:
+      c = self.clear_effect
+      self.clear_effect -= 20
+      for row in self.clear_row:
+        for i in range(self.width):
+          surface.blit(make_surface((c, c, c)), self.transform((i, row)))
+      if self.clear_effect <= 0: 
+        for row in self.clear_row:
+          self.clearLine(row)
+        self.clear_row = []
     # add frame
     surface = add_frame(surface, color, linewidth)
     return surface
@@ -153,19 +170,6 @@ class Field:
     # add frame
     surface = add_frame(surface, color, linewidth)
     return surface 
-
-  # clear line effect (blocking)
-  def FX_clearLine(self, surface):
-    if self.clear_effect <= 0: return
-    c = self.clear_effect
-    self.clear_effect -= 20
-    for row in self.clear_row:
-      for i in range(self.width):
-        surface.blit(make_surface((c, c, c)), self.transform((i, row)))
-    if self.clear_effect <= 0: 
-      for row in self.clear_row:
-        self.clearLine(row)
-      self.clear_row = []
 
   # check if all the coordinates are inside the boundaries and are empty 
   # **(do not check upper bound)
