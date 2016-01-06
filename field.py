@@ -4,17 +4,17 @@ from util import *
 
 '''   class Field definition   '''
 class Field:
-  def __init__(self, width, height):
+  def __init__(self, width, height, invisible = False):
     self.width  = width
     self.height = height
+    self.invisible = invisible
+    
     self.mino_initpos = (self.width/2-1, self.height-1)
     self.next_size = 5
 
-    self.invisible = False
     self.restart()
 
-  def restart(self, invisible = False):
-    self.invisible = invisible
+  def restart(self):
     self.occupied = [[False]*self.height for i in range(self.width)]
     self.pattern = [[None]*self.height for i in range(self.height)]
     default_surface = [make_surface(BLACK), make_surface(GRAY)]

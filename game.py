@@ -34,4 +34,16 @@ class Game1P(Game):
       # routine work
       Game.routine(self)
 
-
+class GameInvisible(Game):
+  def __init__(self, screen):
+    Game.__init__(self, screen)
+    self.field = Field(10, 20, invisible = True)
+    
+  def start(self):
+    while True:
+      # display
+      self.screen.fill(BLACK)
+      self.screen.blit(self.field.draw(), (20, 20))
+      pygame.display.flip()
+      # routine work
+      Game.routine(self)
