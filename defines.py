@@ -9,7 +9,7 @@ HOLD_SIZE     = (HOLD_WIDTH, HOLD_WIDTH)
 NEXT_WIDTH    = 70
 NEXT_SIZE     = (NEXT_WIDTH, NEXT_WIDTH)
 BUFFER_WIDTH  = 10
-SPACE_WIDTH   = 7
+SPACE_WIDTH   = 15
 
 '''   RGB colors   '''
 BLACK   = (  0,   0,   0)

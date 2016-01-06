@@ -28,6 +28,7 @@ class Field:
     self.atk_buffer = []
 
     self.linecount = 0
+    self.combo = 0
 
     self.clear_row = []
     self.clear_effect = 0
@@ -155,8 +156,14 @@ class Field:
     return surface
   
   def drawStatus(self, color, linewidth):
-    f = pygame.font.SysFont("Consolas", 30)
-    surface = f.render("%3d lines" % self.linecount, 2, WHITE)
+    f = pygame.font.SysFont("Consolas", 24)
+    text1 = f.render("%4d lines  " % self.linecount, 2, WHITE)
+    text2 = f.render("%4d combo  " % self.combo, 2, WHITE)
+    w1, h1 = text1.get_size()
+    w2, h2 = text2.get_size()
+    surface = pygame.Surface((max(w1, w2), h1 + h2))
+    surface.blit(text1, (0, 0))
+    surface.blit(text2, (0, h1))
     # add frame
     surface = add_frame(surface, color, linewidth)
     return surface 
@@ -194,8 +201,10 @@ class Field:
           self.pattern[x][y] = self.mino.pattern
     clear_count = self.clearAllLine()
     if clear_count == 0:
+      self.combo = 0
       self.clearAttack()
     else:
+      self.combo += 1
       self.linecount += clear_count
       self.cancelAttack(self.sendAttack(clear_count))
     self.mino = self.pop_nextmino()
