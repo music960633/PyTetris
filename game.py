@@ -23,28 +23,56 @@ class Game1P(Game):
     
   def start(self):
     while True:
-      # auto send line
-      if self.counter % 400 == 0:
-        self.field.recieveAttack(random.randint(1, 4))
-      self.counter += 1
-      # display
-      self.screen.fill(BLACK)
-      self.screen.blit(self.field.draw(), (20, 20))
-      pygame.display.flip()
-      # routine work
-      if Game.routine(self): return
+      # restart
+      while True:
+        # auto send line
+        if self.counter % 400 == 0:
+          self.field.recieveAttack(random.randint(1, 4))
+        self.counter += 1
+        # display
+        self.screen.fill(BLACK)
+        self.screen.blit(self.field.draw(), (20, 20))
+        pygame.display.flip()
+        # routine work
+        quit, restart = Game.routine(self)
+        if quit: return
+        if restart: break
 
 
-class GameInvisible(Game):
+class Game1PInvisible(Game):
   def __init__(self, screen):
     Game.__init__(self, screen)
     self.field = Field(10, 20, invisible = True)
     
   def start(self):
     while True:
-      # display
-      self.screen.fill(BLACK)
-      self.screen.blit(self.field.draw(), (20, 20))
-      pygame.display.flip()
-      # routine work
-      if Game.routine(self): return
+      # restart
+      while True:
+        # display
+        self.screen.fill(BLACK)
+        self.screen.blit(self.field.draw(), (20, 20))
+        pygame.display.flip()
+        # routine work
+        quit, restart = Game.routine(self)
+        if quit: return
+        if restart: break
+
+class Game1P4W(Game):
+  def __init__(self, screen):
+    Game.__init__(self, screen)
+    self.field = Field(4, 20)
+
+  def start(self):
+    while True:
+      # restart
+      self.field.recieveAttack(1)
+      self.field.clearAttack()
+      while True:
+        # display
+        self.screen.fill(BLACK)
+        self.screen.blit(self.field.draw(), (20, 20))
+        pygame.display.flip()
+        # routine work
+        quit, restart = Game.routine(self)
+        if quit: return
+        if restart: break

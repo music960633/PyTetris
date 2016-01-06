@@ -33,6 +33,7 @@ threshold = {
 # call functions corresponding to the key
 # returns True if need to exit
 def execute(field, key):
+  quit, restart = False, False
   if key == K_LEFT:
     field.moveMino((-1, 0))
   elif key == K_RIGHT:
@@ -51,9 +52,10 @@ def execute(field, key):
     field.holdMino()
   elif key == K_F2:
     field.restart()
+    restart = True
   elif key == K_q:
-    return True
-  return False
+    quit = True
+  return quit, restart
 
 # check events, returns True if need to exit
 def check_event(field):
@@ -70,13 +72,15 @@ def check_event(field):
       if event.key in count:
         count[event.key] = 0
     '''
-
+  quit, restart = False, False
   pressed = pygame.key.get_pressed()
   for key in count:
     if pressed[key] == 1:
       count[key] += 1
       if count[key] == 1 or count[key] > threshold[key]:
-        if execute(field, key): return True
+        q, r = execute(field, key)
+        if q: quit = True
+        if r: restart = True
     else:
       count[key] = 0
-  return False
+  return quit, restart
