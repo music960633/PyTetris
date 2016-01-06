@@ -11,10 +11,6 @@ class Field:
     self.h_offset = h_offset
     self.mino_initpos = (self.width/2-1, self.height-1)
     self.next_size = 5
-    # TODO: these lines should be fixed, so ugly QQ
-    self.frame  = pygame.Rect(self.w_offset-1, self.h_offset-1, self.width*BLOCK_WIDTH+2, self.height*BLOCK_WIDTH+2)
-    self.hold_frame = pygame.Rect(self.w_offset-4*BLOCK_WIDTH-20, self.h_offset-1, 4*BLOCK_WIDTH+2, 4*BLOCK_WIDTH+2)
-    self.next_frame = [ pygame.Rect(self.w_offset+self.width*BLOCK_WIDTH+18, self.h_offset-1+i*(4*BLOCK_WIDTH+6), 4*BLOCK_WIDTH+2, 4*BLOCK_WIDTH+2) for i in range(self.next_size) ]
 
     self.invisible = False
     self.restart()
@@ -63,67 +59,100 @@ class Field:
 
   # draw everything
   def draw(self, surface):
-    self.drawGrid(surface)
-    self.drawMino(surface)
-    self.drawHold(surface)
-    self.drawNext(surface)
-    self.drawBuffer(surface)
-    self.drawStatus(surface)
-
+    s_grid = self.drawGrid(WHITE, 1)
+    s_hold = self.drawHold(WHITE, 1)
+    s_next = self.drawNext(WHITE, 1)
+    s_buffer = self.drawBuffer(WHITE, 1)
+    s_status = self.drawStatus(WHITE, 1)
+    
+    surface.blit(s_grid, (self.w_offset, self.h_offset))
+    surface.blit(s_hold, (self.w_offset-s_hold.get_width()-SPACE_WIDTH, self.h_offset))
+    sum_h = 0
+    for i in range(self.next_size):
+      surface.blit(s_next[i], (self.w_offset+s_grid.get_width()+s_buffer.get_width()+2*SPACE_WIDTH, self.h_offset+sum_h))
+      sum_h += s_next[i].get_height() + SPACE_WIDTH
+    surface.blit(s_buffer, (self.w_offset+s_grid.get_width()+SPACE_WIDTH, self.h_offset))
+    surface.blit(s_status, (55, 300))
+    
     self.FX_clearLine(surface)
   
   # draw the grids
-  def drawGrid(self, surface):
-    pygame.draw.rect(surface, WHITE, self.frame, 1)
+  def drawGrid(self, color, linewidth):
+    surface = pygame.Surface((self.width*BLOCK_WIDTH, self.height*BLOCK_WIDTH))
+    transform = lambda (x, y): (x*BLOCK_WIDTH, (self.height-y-1)*BLOCK_WIDTH)
+    # current map
     for i in range(self.width):
       for j in range(self.height):
         block = self.blocks[i][j]
         if block["pattern"] is not None:
-          surface.blit(block["pattern"], self.transform((i, j)))
+          surface.blit(block["pattern"], transform((i, j)))
         else:
-          surface.blit(block["default"], self.transform((i, j)))
-
-  # draw the mino and ghost piece
-  def drawMino(self, surface):
+          surface.blit(block["default"], transform((i, j)))
     # ghost piece
     ghost = self.mino.ghost(self)
     for pos in ghost.get_pos():
       if self.check_inside(pos):
-        surface.blit(ghost.pattern, self.transform(pos))
+        surface.blit(ghost.pattern, transform(pos))
     # current piece
     for pos in self.mino.get_pos():
       if self.check_inside(pos):
-        surface.blit(self.mino.pattern, self.transform(pos))
+        surface.blit(self.mino.pattern, transform(pos))
+    # add frame
+    surface = add_frame(surface, color, linewidth)
+    return surface
 
   # draw the hold piece
-  def drawHold(self, surface):
-    pygame.draw.rect(surface, WHITE, self.hold_frame, 1)
+  def drawHold(self, color, linewidth):
+    surface = pygame.Surface((4*BLOCK_WIDTH, 4*BLOCK_WIDTH))
+    transform = lambda (x, y): (x*BLOCK_WIDTH, (3-y)*BLOCK_WIDTH)
+    # hold piece
     if self.hold is not None:
-      fx, fy = self.hold_frame.center
+      fx, fy = 2*BLOCK_WIDTH, 2*BLOCK_WIDTH
       cx, cy = find_center(self.hold.get_pos())
       for x, y in self.hold.get_pos():
         surface.blit(self.hold.pattern, (int(fx + (x-cx-0.5)*BLOCK_WIDTH), int(fy + (-y+cy-0.5)*BLOCK_WIDTH)))
+    # resize to hold size
+    surface = pygame.transform.scale(surface, HOLD_SIZE)
+    # add frame
+    surface = add_frame(surface, color, linewidth)
+    return surface
   
   # draw the next pieces
-  def drawNext(self, surface):
+  def drawNext(self, color, linewidth):
+    surfaceList = []
+    transform = lambda (x, y): (x*BLOCK_WIDTH, (3-y)*BLOCK_WIDTH)
     for i in range(self.next_size):
-      pygame.draw.rect(surface, WHITE, self.next_frame[i], 1)
       nextmino = self.nextminos[i]
-      fx, fy = self.next_frame[i].center
+      surface = pygame.Surface((4*BLOCK_WIDTH, 4*BLOCK_WIDTH))
+      fx, fy = 2*BLOCK_WIDTH, 2*BLOCK_WIDTH
       cx, cy = find_center(nextmino.get_pos())
       for x, y in nextmino.get_pos():
         surface.blit(nextmino.pattern, (int(fx + (x-cx-0.5)*BLOCK_WIDTH), int(fy + (-y+cy-0.5)*BLOCK_WIDTH)))
+      # resize to next size
+      surface = pygame.transform.scale(surface, NEXT_SIZE)
+      # add frame
+      surface = add_frame(surface, color, linewidth)
+      # add to list
+      surfaceList.append(surface)
+    return surfaceList
 
-  def drawBuffer(self, surface):
+  def drawBuffer(self, color, linewidth):
+    surface = pygame.Surface((BUFFER_WIDTH, self.height*BLOCK_WIDTH))
+    transform = lambda y: (0, (self.height-1-y)*BLOCK_WIDTH)
     buffer_sum = sum(self.atk_buffer)
     for i in range(min(buffer_sum, self.height)):
-      bar = make_surface(RED, (10, BLOCK_WIDTH))
-      surface.blit(bar, (self.w_offset+self.width*BLOCK_WIDTH+5, self.h_offset+(self.height-i-1)*BLOCK_WIDTH))
+      bar = make_surface(RED, (BUFFER_WIDTH, BLOCK_WIDTH))
+      surface.blit(bar, transform(i))
+    # add frame
+    surface = add_frame(surface, color, linewidth)
+    return surface
   
-  def drawStatus(self, surface):
+  def drawStatus(self, color, linewidth):
     f = pygame.font.SysFont("Consolas", 30)
-    status = f.render("%3d lines" % self.linecount, 2, WHITE)
-    surface.blit(status, (55, 300))
+    surface = f.render("%3d lines" % self.linecount, 2, WHITE)
+    # add frame
+    surface = add_frame(surface, color, linewidth)
+    return surface 
 
   # clear line effect (blocking)
   def FX_clearLine(self, surface):

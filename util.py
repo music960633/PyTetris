@@ -7,6 +7,14 @@ def make_surface(color, size = BLOCK_SIZE):
   surface.fill(color)
   return surface
 
+# add a frame
+def add_frame(surface, color, width):
+  w, h = surface.get_size()
+  frame = pygame.Surface((w + 2*width, h + 2*width))
+  frame.blit(surface, (width, width))
+  pygame.draw.rect(frame, color, frame.get_rect(), width)
+  return frame
+
 # returns the center of all positions
 def find_center(posList):
   xs = [float(x) for x, y in posList]
