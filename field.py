@@ -41,10 +41,6 @@ class Field:
   def pause(self):
     return self.clear_effect > 0
 
-  # map grid index to coordinates
-  def transform(self, (x, y)):
-    return (x*BLOCK_WIDTH + self.w_offset, (self.height-1-y)*BLOCK_WIDTH + self.h_offset)
-
   # returns a 2D array containing only True or False
   def get_map(self):
     return [[self.blocks["occupied"] for j in range(self.width)] for i in range(self.height)]
@@ -109,7 +105,7 @@ class Field:
       self.clear_effect -= 20
       for row in self.clear_row:
         for i in range(self.width):
-          surface.blit(make_surface((c, c, c)), self.transform((i, row)))
+          surface.blit(make_surface((c, c, c)), transform((i, row)))
       if self.clear_effect <= 0: 
         for row in self.clear_row:
           self.clearLine(row)
