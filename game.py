@@ -16,9 +16,9 @@ class Game:
 
   def initKeyHandler(self):
     self.keyHandler = KeyHandler()
-    self.keyHandler.addKey(K_LEFT , True, 140, 20)
-    self.keyHandler.addKey(K_RIGHT, True, 140, 20)
-    self.keyHandler.addKey(K_DOWN , True, 20 , 20)
+    self.keyHandler.addKey(K_LEFT , True, 120, 12)
+    self.keyHandler.addKey(K_RIGHT, True, 120, 12)
+    self.keyHandler.addKey(K_DOWN , True, 12 , 12)
     self.keyHandler.addKey(K_UP   , False)
     self.keyHandler.addKey(K_x    , False)
     self.keyHandler.addKey(K_z    , False)
