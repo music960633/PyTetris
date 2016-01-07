@@ -28,33 +28,23 @@ class Game:
     self.keyHandler.addKey(K_q    , False)
 
   def routine(self):
+    # for exit
     for event in pygame.event.get():
       if event.type == pygame.QUIT: sys.exit()
-    
+    # key presses
     time = self.clock.tick(120)
     quit, restart = False, False
     for key in self.keyHandler.getTrigger(time):
-      if key == K_LEFT:
-        self.field.moveMino((-1, 0))
-      elif key == K_RIGHT:
-        self.field.moveMino((1, 0))
-      elif key == K_DOWN:
-        self.field.moveMino((0, -1))
-      elif key == K_UP:
-        self.field.turnMino(False)
-      elif key == K_x:
-        self.field.turnMino(False)
-      elif key == K_z:
-        self.field.turnMino(True)
-      elif key == K_SPACE:
-        self.field.dropMino()
-      elif key == K_c:
-        self.field.holdMino()
-      elif key == K_r:
-        self.field.restart()
-        restart = True
-      elif key == K_q:
-        quit = True
+      if key == K_LEFT    : self.field.moveMino((-1, 0))
+      elif key == K_RIGHT : self.field.moveMino((1, 0))
+      elif key == K_DOWN  : self.field.moveMino((0, -1))
+      elif key == K_UP    : self.field.turnMino(False)
+      elif key == K_x     : self.field.turnMino(False)
+      elif key == K_z     : self.field.turnMino(True)
+      elif key == K_SPACE : self.field.dropMino()
+      elif key == K_c     : self.field.holdMino()
+      elif key == K_r     : restart = True
+      elif key == K_q     : quit = True
     return quit, restart
 
 class Game1P(Game):
@@ -65,6 +55,7 @@ class Game1P(Game):
   def start(self):
     while True:
       # restart
+      self.field.restart()
       while True:
         # auto send line
         if self.counter % 400 == 0:
@@ -88,6 +79,7 @@ class Game1PInvisible(Game):
   def start(self):
     while True:
       # restart
+      self.field.restart()
       while True:
         # display
         self.screen.fill(BLACK)
@@ -106,6 +98,7 @@ class Game1P4W(Game):
   def start(self):
     while True:
       # restart
+      self.field.restart()
       self.field.recieveAttack(1)
       self.field.clearAttack()
       while True:

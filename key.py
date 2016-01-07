@@ -18,6 +18,7 @@ class KeyHandler:
   def addKey(self, key, repeat, delay = 1, rate = 1):
     self.target[key] = self.KeyInfo(repeat, delay, rate)
 
+  # get triggered key
   def getTrigger(self, time):
     press = pygame.key.get_pressed()
     trigger = []
