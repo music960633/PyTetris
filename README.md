@@ -3,11 +3,14 @@
 ### How to play
 
 First, you need to install Python and PyGame. 
+
 [PyGame downloads](http://www.pygame.org/download.shtml)
+
 Then, type the command to execute
-'''
+
+```
 python main.py
-'''
+```
 
 ### Game Control
 - left arrow  : move left
