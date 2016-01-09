@@ -1,18 +1,15 @@
-## A Tetris game based on PyGame
+# PyTetris: A Tetris game based on PyGame
 
-##### How to play
+### How to play
 
 First, you need to install Python and PyGame. 
-
 [PyGame downloads](http://www.pygame.org/download.shtml)
-
 Then, type the command to execute
+'''
+python main.py
+'''
 
-"python main.py"
-
-
-##### Game Control
-
+### Game Control
 - left arrow  : move left
 - right arrow : move right
 - down arrow  : soft drop
@@ -23,9 +20,7 @@ Then, type the command to execute
 - C           : hold
 - R           : restart
 
-
-##### Current status
-
+### Current status
 1. basic game features (move, turn, clear line, hold, next pieces)
 2. basic GUI
 3. Arika SRS
@@ -35,9 +30,8 @@ Then, type the command to execute
    - 1P with invisible blocks
    - 1P 4-wide practice
 
-##### TODOs
-
+### TODOs
 1. game over checking
 2. attack calculation (combo, T-spin)
 3. 2P battle
-   4. other
+4. other
