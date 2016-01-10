@@ -30,13 +30,6 @@ class Field:
     self.linecount = 0
     self.combo = 0
 
-    self.clear_row = []
-    self.clear_effect = 0
-
-  # returns True if blocked by some effects (cannot move the mino)
-  def pause(self):
-    return self.clear_effect > 0
-
   # returns a 2D array containing only True or False
   def get_map(self):
     return [[self.occupied[i][j] for j in range(self.width)] for i in range(self.height)]
@@ -94,17 +87,6 @@ class Field:
     for pos in self.mino.get_pos():
       if self.check_inside(pos):
         surface.blit(self.mino.pattern, transform(pos))
-    # clear line effect
-    if self.clear_effect > 0:
-      c = self.clear_effect
-      self.clear_effect -= 20
-      for row in self.clear_row:
-        for i in range(self.width):
-          surface.blit(make_surface((c, c, c)), transform((i, row)))
-      if self.clear_effect <= 0: 
-        for row in self.clear_row:
-          self.clearLine(row)
-        self.clear_row = []
     # add frame
     surface = add_frame(surface, color, linewidth)
     return surface
@@ -182,17 +164,14 @@ class Field:
 
   # move the mino
   def moveMino(self, direction = (0, 0)):
-    if self.pause(): return False
     return self.mino.move(direction, self)
   
   # turn the mino
   def turnMino(self, rev = False):
-    if self.pause(): return False
     return self.mino.turn(rev, self)
   
   # harddrop the mino
   def dropMino(self):
-    if self.pause(): return False
     while self.moveMino((0, -1)): pass
     for x, y in self.mino.get_pos():
       if self.check_inside((x, y)):
@@ -226,12 +205,10 @@ class Field:
       
   # clear all lines
   def clearAllLine(self):
-    if self.pause(): return
     count = 0
     for row in range(self.height-1, -1, -1):
       if self.checkLine(row):
-        self.clear_row.append(row)
-        self.clear_effect = 200
+        self.clearLine(row)
         count += 1
     return count
   
