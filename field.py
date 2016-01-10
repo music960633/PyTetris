@@ -5,11 +5,14 @@ from util import *
 '''   class Field definition   '''
 class Field:
   def __init__(self, width, height, invisible = False):
+    # width and height
     self.width  = width
     self.height = height
+    # stacked piece invisible
     self.invisible = invisible
-    
+    # initial position of a piece
     self.mino_initpos = (self.width/2-1, self.height-1)
+    # size of next queue
     self.next_size = 5
 
     self.restart()
@@ -19,15 +22,22 @@ class Field:
     self.pattern = [[None]*self.height for i in range(self.height)]
     default_surface = [make_surface(BLACK), make_surface(GRAY)]
     self.default = [[default_surface[(i+j) % 2] for j in range(self.height)] for i in range(self.height)]
-    
+    # mino pack generator
     self.generator = Generator()
+    # next queue
     self.nextminos = [self.generator.next_mino() for x in range(self.next_size)]
+    # current piece
     self.mino = self.pop_nextmino()
-    self.holdflag = True
+    # hold piece and hold flag
     self.hold = None
+    self.holdflag = True
+    # recieved attack buffer
     self.atk_buffer = []
-
+   
+    '''   game status   '''
+    # line cleared count
     self.linecount = 0
+    # combo count
     self.combo = 0
 
   # returns a 2D array containing only True or False
@@ -55,14 +65,19 @@ class Field:
     w_buffer, h_buffer = s_buffer.get_size()
 
     surface = pygame.Surface((w_hold + w_grid + w_buffer + w_next + 3*SPACE_WIDTH, max(h_grid, h_next)))
-    
+   
+    # blit hold piece
     surface.blit(s_hold, (0, 0))
+    # blit stacked piece and current piece
     surface.blit(s_grid, (w_hold + SPACE_WIDTH, 0))
+    # blit attack buffer
     surface.blit(s_buffer, (w_hold + w_grid + 2*SPACE_WIDTH, 0))
+    # blit next queue
     sum_h = 0
     for i in range(self.next_size):
       surface.blit(s_next[i], (w_hold + w_grid + w_buffer + 3*SPACE_WIDTH, sum_h))
       sum_h += s_next[i].get_height() + SPACE_WIDTH
+    # blit status
     surface.blit(s_status, (0, 300))
 
     return surface
@@ -151,7 +166,7 @@ class Field:
     return surface 
 
   # check if all the coordinates are inside the boundaries and are empty 
-  # **(do not check upper bound)
+  # ** do not check upper bound
   def check_valid(self, posList):
     for x, y in posList:
       if x < 0 or x >= self.width or y < 0: return False
