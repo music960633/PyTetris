@@ -12,16 +12,22 @@ Then, type the command to execute
 python main.py
 ```
 
+### Menu Control
+- down arrow   : next option
+- up arrow     : previous option
+- left arrow   : return to parent menu
+- return(enter): select the option
+
 ### Game Control
-- left arrow  : move left
-- right arrow : move right
-- down arrow  : soft drop
-- space       : harddrop
-- up arrow    : spin clockwise
-- X           : spin clockwise (same as up arrow)
-- Z           : spin counter-clockwise
-- C           : hold
-- R           : restart
+- left arrow   : move left
+- right arrow  : move right
+- down arrow   : soft drop
+- space        : harddrop
+- up arrow     : spin clockwise
+- X            : spin clockwise (same as up arrow)
+- Z            : spin counter-clockwise
+- C            : hold
+- R            : restart
 
 ### Current status
 1. basic game features (move, turn, clear line, hold, next pieces)
