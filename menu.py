@@ -4,7 +4,7 @@ from pygame.locals import *
 from defines import *
 
 class Menu:
-  def __init__(self, isRoot):
+  def __init__(self, isRoot = False):
     self.options = []
     self.actions = []
     self.pointer = 0

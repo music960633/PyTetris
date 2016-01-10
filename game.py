@@ -7,8 +7,8 @@ from defines import *
 from key import *
 
 class Game:
-  def __init__(self, screen):
-    self.screen = screen
+  def __init__(self):
+    self.screen = pygame.display.get_surface()
     self.clock = pygame.time.Clock()
     # default: standard
     self.field = Field(10, 20)
@@ -48,8 +48,8 @@ class Game:
     return quit, restart
 
 class Game1P(Game):
-  def __init__(self, screen):
-    Game.__init__(self, screen)
+  def __init__(self):
+    Game.__init__(self)
     self.counter = 0
     
   def start(self):
@@ -72,8 +72,8 @@ class Game1P(Game):
 
 
 class Game1PInvisible(Game):
-  def __init__(self, screen):
-    Game.__init__(self, screen)
+  def __init__(self):
+    Game.__init__(self)
     self.field = Field(10, 20, invisible = True)
     
   def start(self):
@@ -91,8 +91,8 @@ class Game1PInvisible(Game):
         if restart: break
 
 class Game1P4W(Game):
-  def __init__(self, screen):
-    Game.__init__(self, screen)
+  def __init__(self):
+    Game.__init__(self)
     self.field = Field(4, 20)
 
   def start(self):
