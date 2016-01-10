@@ -61,10 +61,10 @@ class Field:
     s_status = self.drawStatus(WHITE, 1)
     w_grid, h_grid = s_grid.get_size()
     w_hold, h_hold = s_hold.get_size()
-    w_next, h_next = s_hold.get_size()
+    w_next         = s_next[0].get_width()
     w_buffer, h_buffer = s_buffer.get_size()
 
-    surface = pygame.Surface((w_hold + w_grid + w_buffer + w_next + 3*SPACE_WIDTH, max(h_grid, h_next)))
+    surface = pygame.Surface((w_hold + w_grid + w_buffer + w_next + 3*SPACE_WIDTH, h_grid))
    
     # blit hold piece
     surface.blit(s_hold, (0, 0))
