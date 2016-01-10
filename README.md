@@ -28,6 +28,7 @@ python main.py
 - Z            : spin counter-clockwise
 - C            : hold
 - R            : restart
+- Q            : quit game
 
 ### Current status
 1. basic game features (move, turn, clear line, hold, next pieces)
