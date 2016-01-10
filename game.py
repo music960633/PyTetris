@@ -57,10 +57,6 @@ class Game1P(Game):
       # restart
       self.field.restart()
       while True:
-        # auto send line
-        if self.counter % 400 == 0 and not self.field.gameover:
-          self.field.recieveAttack(random.randint(1, 4))
-        self.counter += 1
         # display
         self.screen.fill(BLACK)
         self.screen.blit(self.field.draw(), (20, 20))
@@ -81,6 +77,39 @@ class Game1PInvisible(Game):
       # restart
       self.field.restart()
       while True:
+        # display
+        self.screen.fill(BLACK)
+        self.screen.blit(self.field.draw(), (20, 20))
+        pygame.display.flip()
+        # routine work
+        quit, restart = Game.routine(self)
+        if quit: return
+        if restart: break
+
+class Game1PDig(Game):
+  def __init__(self):
+    Game.__init__(self)
+    self.counter = 0
+    
+  def start(self):
+    while True:
+      # restart
+      self.field.restart()
+      threshold = 300
+      accumulate = 0
+      while True:
+        # auto send line
+        self.counter += 1
+        if self.counter > threshold and not self.field.gameover:
+          self.field.recieveAttack(1)
+          self.counter = 0
+          accumulate += 1
+        # decrease threshold
+        if accumulate == 2:
+          accumulate = 0
+          threshold -= 10
+          if threshold < 5:
+            threshold = 5
         # display
         self.screen.fill(BLACK)
         self.screen.blit(self.field.draw(), (20, 20))
