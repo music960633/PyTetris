@@ -40,7 +40,6 @@ python main.py
    - 1P 4-wide practice
 
 ### TODOs
-1. game over checking
-2. attack calculation (combo, T-spin)
-3. 2P battle
-4. other
+1. attack calculation (combo, T-spin)
+2. 2P battle
+3. other

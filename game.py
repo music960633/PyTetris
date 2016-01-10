@@ -58,7 +58,7 @@ class Game1P(Game):
       self.field.restart()
       while True:
         # auto send line
-        if self.counter % 400 == 0:
+        if self.counter % 400 == 0 and not self.field.gameover:
           self.field.recieveAttack(random.randint(1, 4))
         self.counter += 1
         # display

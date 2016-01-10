@@ -22,6 +22,8 @@ class Field:
     self.pattern = [[None]*self.height for i in range(self.height)]
     default_surface = [make_surface(BLACK), make_surface(GRAY)]
     self.default = [[default_surface[(i+j) % 2] for j in range(self.height)] for i in range(self.height)]
+    # gameover flag
+    self.gameover = False
     # mino pack generator
     self.generator = Generator()
     # next queue
@@ -54,7 +56,7 @@ class Field:
 
   # draw everything
   def draw(self):
-    s_grid = self.drawGrid(WHITE, 1)
+    s_grid = self.drawGrid(RED if self.gameover else WHITE, 1)
     s_hold = self.drawHold(WHITE, 1)
     s_next = self.drawNext(WHITE, 1)
     s_buffer = self.drawBuffer(WHITE, 1)
@@ -179,14 +181,17 @@ class Field:
 
   # move the mino
   def moveMino(self, direction = (0, 0)):
+    if self.gameover: return
     return self.mino.move(direction, self)
   
   # turn the mino
   def turnMino(self, rev = False):
+    if self.gameover: return
     return self.mino.turn(rev, self)
   
   # harddrop the mino
   def dropMino(self):
+    if self.gameover: return
     while self.moveMino((0, -1)): pass
     for x, y in self.mino.get_pos():
       if self.check_inside((x, y)):
@@ -203,9 +208,13 @@ class Field:
       self.cancelAttack(self.sendAttack(clear_count))
     self.mino = self.pop_nextmino()
     self.holdflag = True
+    # check game over
+    if not self.check_valid(self.mino.get_pos()):
+      self.gameover = True
 
   # hold the mino
   def holdMino(self):
+    if self.gameover: return
     if self.holdflag == True:
       tmp = self.hold
       self.hold = self.mino
