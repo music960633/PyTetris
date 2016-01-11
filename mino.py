@@ -5,9 +5,10 @@ from util import make_surface
 
 '''   class Mino definition   '''
 class Mino:
-  def __init__(self, center, pos, orientation, turn_enable, turn_center, turn_table, pattern):
+  def __init__(self, center, pos, isT, orientation, turn_enable, turn_center, turn_table, pattern):
     self.center       = center
     self.pos          = list(pos)
+    self.isT          = isT
     self.orientation  = orientation
     self.turn_enable  = turn_enable
     self.turn_center  = turn_center
@@ -18,7 +19,7 @@ class Mino:
   def copy(self, center = None):
     if center == None:
       center = self.center
-    return Mino(center, self.pos, self.orientation, self.turn_enable, self.turn_center, self.turn_table, self.pattern)
+    return Mino(center, self.pos, self.isT, self.orientation, self.turn_enable, self.turn_center, self.turn_table, self.pattern)
 
   # get the absolute positions of the mino
   def get_pos(self):
@@ -111,6 +112,7 @@ def Mino_I(center):
   return Mino(                                        \
     center      = center,                             \
     pos         = [(-1, 0), (0, 0), (1, 0), (2, 0)],  \
+    isT         = False                               \
     orientation = 0,                                  \
     turn_enable = True,                               \
     turn_center = ((1, 0), (0, -1)),                  \
@@ -121,6 +123,7 @@ def Mino_O(center):
   return Mino(                                        \
     center      = center,                             \
     pos         = [(0, 0), (0, 1), (1, 0), (1, 1)],   \
+    isT         = False                               \
     orientation = 0,                                  \
     turn_enable = False,                              \
     turn_center = ((0, 0), (0, 0)),                   \
@@ -131,6 +134,7 @@ def Mino_T(center):
   return Mino(                                        \
     center      = center,                             \
     pos         = [(-1, 0), (0, 0), (1, 0), (0, 1)],  \
+    isT         = True                                \
     orientation = 0,                                  \
     turn_enable = True,                               \
     turn_center = ((0, 0), (0, 0)),                   \
@@ -141,6 +145,7 @@ def Mino_J(center):
   return Mino(                                        \
     center      = center,                             \
     pos         = [(-1, 1), (-1, 0), (0, 0), (1, 0)], \
+    isT         = False                               \
     orientation = 0,                                  \
     turn_enable = True,                               \
     turn_center = ((0, 0), (0, 0)),                   \
@@ -151,6 +156,7 @@ def Mino_L(center):
   return Mino(                                        \
     center      = center,                             \
     pos         = [(-1, 0), (0, 0), (1, 0), (1, 1)],  \
+    isT         = False                               \
     orientation = 0,                                  \
     turn_enable = True,                               \
     turn_center = ((0, 0), (0, 0)),                   \
@@ -161,6 +167,7 @@ def Mino_S(center):
   return Mino(                                        \
     center      = center,                             \
     pos         = [(-1, 0), (0, 0), (0, 1), (1, 1)],  \
+    isT         = False                               \
     orientation = 0,                                  \
     turn_enable = True,                               \
     turn_center = ((0, 0), (0, 0)),                   \
@@ -171,6 +178,7 @@ def Mino_Z(center):
   return Mino(                                        \
     center      = center,                             \
     pos         = [(-1, 1), (0, 1), (0, 0), (1, 0)],  \
+    isT         = False                               \
     orientation = 0,                                  \
     turn_enable = True,                               \
     turn_center = ((0, 0), (0, 0)),                   \
