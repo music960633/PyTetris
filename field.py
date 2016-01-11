@@ -37,8 +37,8 @@ class Field:
     self.atk_buffer = []
    
     '''   game status   '''
-    # line cleared count
-    self.linecount = 0
+    # line cleared total
+    self.lineTotal = 0
     # combo count
     self.combo = 0
 
@@ -156,7 +156,7 @@ class Field:
   
   def drawStatus(self, color, linewidth):
     f = pygame.font.SysFont("Consolas", 24)
-    text1 = f.render("%4d lines  " % self.linecount, 2, WHITE)
+    text1 = f.render("%4d lines  " % self.lineTotal, 2, WHITE)
     text2 = f.render("%4d combo  " % self.combo, 2, WHITE)
     w1, h1 = text1.get_size()
     w2, h2 = text2.get_size()
@@ -204,7 +204,7 @@ class Field:
       self.clearAttack()
     else:
       self.combo += 1
-      self.linecount += clear_count
+      self.lineTotal += clear_count
       self.cancelAttack(self.sendAttack(clear_count))
     self.mino = self.pop_nextmino()
     self.holdflag = True
