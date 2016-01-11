@@ -160,11 +160,14 @@ class Field:
     f = pygame.font.SysFont("Consolas", 24)
     text1 = f.render("%4d lines  " % self.lineTotal, 2, WHITE)
     text2 = f.render("%4d combo  " % self.combo, 2, WHITE)
+    text3 = f.render(self.getClearDescription(self.lineClear, False), 2, WHITE)
     w1, h1 = text1.get_size()
     w2, h2 = text2.get_size()
-    surface = pygame.Surface((max(w1, w2), h1 + h2))
+    w3, h3 = text3.get_size()
+    surface = pygame.Surface((max(w1, w2, w3), h1 + h2 + h3))
     surface.blit(text1, (0, 0))
     surface.blit(text2, (0, h1))
+    surface.blit(text3, (0, h1 + h2))
     # add frame
     surface = add_frame(surface, color, linewidth)
     return surface 
@@ -295,3 +298,12 @@ class Field:
     elif line == 3: return 2
     elif line == 4: return 4
     else: return 0
+
+  # line clear description string
+  def getClearDescription(self, line, tspin):
+    assert not (line == 0 and tspin)
+    assert 0 <= line <= 4
+    table = ["", "single", "double", "triple", "tetris"]
+    s = "  T-spin" if tspin else "  "
+    s += table[line]
+    return s
