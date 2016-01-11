@@ -112,7 +112,7 @@ def Mino_I(center):
   return Mino(                                        \
     center      = center,                             \
     pos         = [(-1, 0), (0, 0), (1, 0), (2, 0)],  \
-    isT         = False                               \
+    isT         = False,                              \
     orientation = 0,                                  \
     turn_enable = True,                               \
     turn_center = ((1, 0), (0, -1)),                  \
@@ -123,7 +123,7 @@ def Mino_O(center):
   return Mino(                                        \
     center      = center,                             \
     pos         = [(0, 0), (0, 1), (1, 0), (1, 1)],   \
-    isT         = False                               \
+    isT         = False,                              \
     orientation = 0,                                  \
     turn_enable = False,                              \
     turn_center = ((0, 0), (0, 0)),                   \
@@ -134,7 +134,7 @@ def Mino_T(center):
   return Mino(                                        \
     center      = center,                             \
     pos         = [(-1, 0), (0, 0), (1, 0), (0, 1)],  \
-    isT         = True                                \
+    isT         = True,                               \
     orientation = 0,                                  \
     turn_enable = True,                               \
     turn_center = ((0, 0), (0, 0)),                   \
@@ -145,7 +145,7 @@ def Mino_J(center):
   return Mino(                                        \
     center      = center,                             \
     pos         = [(-1, 1), (-1, 0), (0, 0), (1, 0)], \
-    isT         = False                               \
+    isT         = False,                              \
     orientation = 0,                                  \
     turn_enable = True,                               \
     turn_center = ((0, 0), (0, 0)),                   \
@@ -156,7 +156,7 @@ def Mino_L(center):
   return Mino(                                        \
     center      = center,                             \
     pos         = [(-1, 0), (0, 0), (1, 0), (1, 1)],  \
-    isT         = False                               \
+    isT         = False,                              \
     orientation = 0,                                  \
     turn_enable = True,                               \
     turn_center = ((0, 0), (0, 0)),                   \
@@ -167,7 +167,7 @@ def Mino_S(center):
   return Mino(                                        \
     center      = center,                             \
     pos         = [(-1, 0), (0, 0), (0, 1), (1, 1)],  \
-    isT         = False                               \
+    isT         = False,                              \
     orientation = 0,                                  \
     turn_enable = True,                               \
     turn_center = ((0, 0), (0, 0)),                   \
@@ -178,7 +178,7 @@ def Mino_Z(center):
   return Mino(                                        \
     center      = center,                             \
     pos         = [(-1, 1), (0, 1), (0, 0), (1, 0)],  \
-    isT         = False                               \
+    isT         = False,                              \
     orientation = 0,                                  \
     turn_enable = True,                               \
     turn_center = ((0, 0), (0, 0)),                   \
