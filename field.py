@@ -48,6 +48,8 @@ class Field:
     self.attackTotal = 0
     # combo count
     self.combo = 0
+    # back to back
+    self.b2b = False
 
   # returns a 2D array containing only True or False
   def get_map(self):
@@ -223,7 +225,7 @@ class Field:
           self.pattern[x][y] = self.mino.pattern
     self.lineClear = self.clearAllLine()
     self.tSpinDisplay = self.tSpin
-    attack = self.sendAttack(self.lineClear, self.tSpinDisplay, self.combo)
+    attack, self.b2b = self.sendAttack(self.lineClear, self.tSpinDisplay, self.b2b, self.combo)
     self.lineTotal += self.lineClear
     self.attackTotal += attack
     if self.lineClear == 0:
@@ -312,30 +314,37 @@ class Field:
     return val
 
   # send attack
-  def sendAttack(self, line, tspin, combo):
-    atk = 0
+  def sendAttack(self, line, tspin, b2b, combo):
     # not T-spin
     if not tspin:
-      if line == 0: atk = 0
-      elif line == 1: atk = 0
-      elif line == 2: atk = 1
-      elif line == 3: atk = 2
-      elif line == 4: atk = 4
-      else: atk = 0
+      if   line == 0: atk, b2b = 0, b2b
+      elif line == 1: atk, b2b = 0, False
+      elif line == 2: atk, b2b = 1, False
+      elif line == 3: atk, b2b = 2, False
+      elif line == 4:
+        if b2b: atk, b2b = 5, True
+        else:   atk, b2b = 4, True
+      else: assert False, "line clear out of bound"
     # T-spin
     else:
-      if line == 0: atk = 0
-      elif line == 1: atk = 2
-      elif line == 2: atk = 4
-      elif line == 3: atk = 6
-      else: atk = 0
+      if   line == 0: atk, b2b = 0, b2b
+      elif line == 1:
+        if b2b: atk, b2b = 3, True
+        else:   atk, b2b = 2, True
+      elif line == 2:
+        if b2b: atk, b2b = 5, True
+        else  : atk, b2b = 4, True
+      elif line == 3:
+        if b2b: atk, b2b = 8, True
+        else  : atk, b2b = 6, True
+      else: assert False, "line clear out of bound"
     # combo
     if combo <= 1: atk += 0
     elif combo <= 3: atk += 1
     elif combo <= 5: atk += 2
     elif combo <= 7: atk += 3
     else: atk += 4
-    return atk
+    return atk, b2b
 
   # line clear description string
   def getClearDescription(self, line, tspin):
