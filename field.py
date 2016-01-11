@@ -177,10 +177,16 @@ class Field:
 
   # check if all the coordinates are inside the boundaries and are empty 
   # ** do not check upper bound
-  def check_valid(self, posList):
-    for x, y in posList:
-      if x < 0 or x >= self.width or y < 0: return False
-      if y < self.height and self.occupied[x][y]: return False
+  def check_valid_list(self, posList):
+    for pos in posList:
+      if not self.check_valid(pos): return False
+    return True
+  
+  # check if the coordinate is inside the boundaries and is empty
+  # ** do not check upper bound
+  def check_valid(self, (x, y)):
+    if x < 0 or x >= self.width or y < 0: return False
+    if y < self.height and self.occupied[x][y]: return False
     return True
 
   # check if the coordinate is inside the boundary
@@ -222,7 +228,7 @@ class Field:
     self.mino = self.pop_nextmino()
     self.holdflag = True
     # check game over
-    if not self.check_valid(self.mino.get_pos()):
+    if not self.check_valid_list(self.mino.get_pos()):
       self.gameover = True
 
   # hold the mino
@@ -321,7 +327,7 @@ class Field:
     centerx, centery = mino.center
     counter = 0
     for dx, dy in [(1, 1), (1, -1), (-1, -1), (-1, 1)]:
-      if not self.check_valid([(centerx + dx, centery + dy)]): 
+      if not self.check_valid((centerx + dx, centery + dy)):
         counter += 1
     return counter >= 3
 
