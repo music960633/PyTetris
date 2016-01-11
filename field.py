@@ -37,6 +37,8 @@ class Field:
     self.atk_buffer = []
    
     '''   game status   '''
+    # line clear
+    self.lineClear = 0
     # line cleared total
     self.lineTotal = 0
     # combo count
@@ -198,14 +200,14 @@ class Field:
         self.occupied[x][y] = True
         if self.invisible == False:
           self.pattern[x][y] = self.mino.pattern
-    clear_count = self.clearAllLine()
-    if clear_count == 0:
+    self.lineClear = self.clearAllLine()
+    if self.lineClear == 0:
       self.combo = 0
       self.clearAttack()
     else:
       self.combo += 1
-      self.lineTotal += clear_count
-      self.cancelAttack(self.sendAttack(clear_count))
+      self.lineTotal += self.lineClear
+      self.cancelAttack(self.sendAttack(self.lineClear))
     self.mino = self.pop_nextmino()
     self.holdflag = True
     # check game over
