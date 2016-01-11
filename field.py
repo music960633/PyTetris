@@ -223,7 +223,7 @@ class Field:
           self.pattern[x][y] = self.mino.pattern
     self.lineClear = self.clearAllLine()
     self.tSpinDisplay = self.tSpin
-    attack = self.sendAttack(self.lineClear, self.tSpinDisplay)
+    attack = self.sendAttack(self.lineClear, self.tSpinDisplay, self.combo)
     self.lineTotal += self.lineClear
     self.attackTotal += attack
     if self.lineClear == 0:
@@ -312,20 +312,30 @@ class Field:
     return val
 
   # send attack
-  def sendAttack(self, line, tspin):
+  def sendAttack(self, line, tspin, combo):
+    atk = 0
+    # not T-spin
     if not tspin:
-      if line == 0: return 0
-      elif line == 1: return 0
-      elif line == 2: return 1
-      elif line == 3: return 2
-      elif line == 4: return 4
-      else: return 0
+      if line == 0: atk = 0
+      elif line == 1: atk = 0
+      elif line == 2: atk = 1
+      elif line == 3: atk = 2
+      elif line == 4: atk = 4
+      else: atk = 0
+    # T-spin
     else:
-      if line == 0: return 0
-      elif line == 1: return 2
-      elif line == 2: return 4
-      elif line == 3: return 6
-      else: return 0
+      if line == 0: atk = 0
+      elif line == 1: atk = 2
+      elif line == 2: atk = 4
+      elif line == 3: atk = 6
+      else: atk = 0
+    # combo
+    if combo <= 1: atk += 0
+    elif combo <= 3: atk += 1
+    elif combo <= 5: atk += 2
+    elif combo <= 7: atk += 3
+    else: atk += 4
+    return atk
 
   # line clear description string
   def getClearDescription(self, line, tspin):
