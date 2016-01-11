@@ -44,6 +44,8 @@ class Field:
     self.tSpinDisplay = False
     # line cleared total
     self.lineTotal = 0
+    # attack total
+    self.attackTotal = 0
     # combo count
     self.combo = 0
 
@@ -162,15 +164,18 @@ class Field:
   def drawStatus(self, color, linewidth):
     f = pygame.font.SysFont("Consolas", 24)
     text1 = f.render("%4d lines  " % self.lineTotal, 2, WHITE)
-    text2 = f.render("%4d combo  " % self.combo, 2, WHITE)
-    text3 = f.render(self.getClearDescription(self.lineClear, self.tSpinDisplay), 2, WHITE)
+    text2 = f.render("%4d attack " % self.attackTotal, 2, WHITE)
+    text3 = f.render("%4d combo  " % self.combo, 2, WHITE)
+    text4 = f.render(self.getClearDescription(self.lineClear, self.tSpinDisplay), 2, WHITE)
     w1, h1 = text1.get_size()
     w2, h2 = text2.get_size()
     w3, h3 = text3.get_size()
-    surface = pygame.Surface((max(w1, w2, w3), h1 + h2 + h3))
+    w4, h4 = text4.get_size()
+    surface = pygame.Surface((max(w1, w2, w3, w4), h1 + h2 + h3 + h4))
     surface.blit(text1, (0, 0))
     surface.blit(text2, (0, h1))
     surface.blit(text3, (0, h1 + h2))
+    surface.blit(text4, (0, h1 + h2 + h3))
     # add frame
     surface = add_frame(surface, color, linewidth)
     return surface 
@@ -218,13 +223,15 @@ class Field:
           self.pattern[x][y] = self.mino.pattern
     self.lineClear = self.clearAllLine()
     self.tSpinDisplay = self.tSpin
+    attack = self.sendAttack(self.lineClear, self.tSpinDisplay)
+    self.lineTotal += self.lineClear
+    self.attackTotal += attack
     if self.lineClear == 0:
       self.combo = 0
       self.clearAttack()
     else:
       self.combo += 1
-      self.lineTotal += self.lineClear
-      self.cancelAttack(self.sendAttack(self.lineClear))
+      self.cancelAttack(attack)
     self.mino = self.pop_nextmino()
     self.holdflag = True
     # check game over
@@ -305,13 +312,20 @@ class Field:
     return val
 
   # send attack
-  def sendAttack(self, line):
-    if line == 0: return 0
-    elif line == 1: return 0
-    elif line == 2: return 1
-    elif line == 3: return 2
-    elif line == 4: return 4
-    else: return 0
+  def sendAttack(self, line, tspin):
+    if not tspin:
+      if line == 0: return 0
+      elif line == 1: return 0
+      elif line == 2: return 1
+      elif line == 3: return 2
+      elif line == 4: return 4
+      else: return 0
+    else:
+      if line == 0: return 0
+      elif line == 1: return 2
+      elif line == 2: return 4
+      elif line == 3: return 6
+      else: return 0
 
   # line clear description string
   def getClearDescription(self, line, tspin):
