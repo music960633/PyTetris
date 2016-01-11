@@ -34,12 +34,13 @@ python main.py
 1. basic game features (move, turn, clear line, hold, next pieces)
 2. basic GUI
 3. Arika SRS
-4. Game modes
+4. T-spin ckecking
+5. Game modes
    - 1P with auto attack
    - 1P with invisible blocks
    - 1P 4-wide practice
+   - 1P dig challenge
 
 ### TODOs
-1. attack calculation (combo, T-spin)
 2. 2P battle
 3. other
