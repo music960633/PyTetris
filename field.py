@@ -39,6 +39,9 @@ class Field:
     '''   game status   '''
     # line clear
     self.lineClear = 0
+    # T-spin flag
+    self.tSpin = False
+    self.tSpinDisplay = False
     # line cleared total
     self.lineTotal = 0
     # combo count
@@ -160,7 +163,7 @@ class Field:
     f = pygame.font.SysFont("Consolas", 24)
     text1 = f.render("%4d lines  " % self.lineTotal, 2, WHITE)
     text2 = f.render("%4d combo  " % self.combo, 2, WHITE)
-    text3 = f.render(self.getClearDescription(self.lineClear, False), 2, WHITE)
+    text3 = f.render(self.getClearDescription(self.lineClear, self.tSpinDisplay), 2, WHITE)
     w1, h1 = text1.get_size()
     w2, h2 = text2.get_size()
     w3, h3 = text3.get_size()
@@ -187,12 +190,16 @@ class Field:
   # move the mino
   def moveMino(self, direction = (0, 0)):
     if self.gameover: return
-    return self.mino.move(direction, self)
+    success = self.mino.move(direction, self)
+    if success: self.tSpin = False
+    return success
   
   # turn the mino
   def turnMino(self, rev = False):
     if self.gameover: return
-    return self.mino.turn(rev, self)
+    success = self.mino.turn(rev, self)
+    if success: self.tSpin = self.checkTspin(self.mino)
+    return success
   
   # harddrop the mino
   def dropMino(self):
@@ -204,6 +211,7 @@ class Field:
         if self.invisible == False:
           self.pattern[x][y] = self.mino.pattern
     self.lineClear = self.clearAllLine()
+    self.tSpinDisplay = self.tSpin
     if self.lineClear == 0:
       self.combo = 0
       self.clearAttack()
@@ -301,9 +309,19 @@ class Field:
 
   # line clear description string
   def getClearDescription(self, line, tspin):
-    assert not (line == 0 and tspin)
     assert 0 <= line <= 4
     table = ["", "single", "double", "triple", "tetris"]
-    s = "  T-spin" if tspin else "  "
+    s = "  T " if tspin else "  "
     s += table[line]
     return s
+  
+  # check T spin
+  def checkTspin(self, mino):
+    if not mino.isT: return False
+    centerx, centery = mino.center
+    counter = 0
+    for dx, dy in [(1, 1), (1, -1), (-1, -1), (-1, 1)]:
+      if not self.check_valid([(centerx + dx, centery + dy)]): 
+        counter += 1
+    return counter >= 3
+
