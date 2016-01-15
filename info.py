@@ -15,18 +15,25 @@ class GameInfo:
     return atk
 
   def calcAtk(self, line, tspin):
+    clearAtk = 0
     # normal attack
     if not tspin:
       assert 0 <= line <= 4, "invalid lines"
       if not self.b2b:
-        return (0, 0, 1, 2, 4)[line]
+        clearAtk = (0, 0, 1, 2, 4)[line]
       else:
-        return (0, 0, 1, 2, 5)[line]
+        clearAtk = (0, 0, 1, 2, 5)[line]
     # T spin attack
     else:
       assert 0 <= line <= 3, "invalid lines"
       if not self.b2b:
-        return (0, 2, 4, 6)[line]
+        clearAtk = (0, 2, 4, 6)[line]
       else:
-        return (0, 3, 5, 8)[line]
+        clearAtk = (0, 3, 5, 8)[line]
+    # combo attack
+    if self.combo < 8:
+      comboAtk = (0, 0, 1, 1, 2, 2, 3, 3)[self.combo]
+    else:
+      comboAtk = 4
+    return clearAtk + comboAtk
 
