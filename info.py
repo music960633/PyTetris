@@ -9,7 +9,7 @@ class GameInfo:
   def updateAndGetAtk(self, line, tspin):
     atk = self.calcAtk(line, tspin)
     self.lineTot += line
-    self.atkTot += self.calcAttack(line, tspin)
+    self.atkTot += self.calcAtk(line, tspin)
     self.combo = (self.combo + 1) if line > 0 else 0
     self.b2b = self.b2b if line == 0 else (line == 4 or tspin)
     return atk
