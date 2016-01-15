@@ -1,4 +1,5 @@
 import pygame
+import random
 from mino import Mino, Generator
 from info import GameInfo
 from util import make_surface, add_frame, find_center
