@@ -1,5 +1,6 @@
 import pygame
 from mino import Mino, Generator
+from info import GameInfo
 from util import make_surface, add_frame, find_center
 from defines import *
 
@@ -38,19 +39,13 @@ class Field:
     self.atk_buffer = []
    
     '''   game status   '''
+    # game info (total lines, total attack, combo, b2b)
+    self.info = GameInfo()
     # line clear
     self.lineClear = 0
     # T-spin flag
     self.tSpin = False
     self.tSpinDisplay = False
-    # line cleared total
-    self.lineTotal = 0
-    # attack total
-    self.attackTotal = 0
-    # combo count
-    self.combo = 0
-    # back to back
-    self.b2b = False
 
   # returns a 2D array containing only True or False
   def get_map(self):
@@ -166,9 +161,9 @@ class Field:
   
   def drawStatus(self, color, linewidth):
     f = pygame.font.SysFont("Consolas", 24)
-    text1 = f.render("%4d lines  " % self.lineTotal, 2, WHITE)
-    text2 = f.render("%4d attack " % self.attackTotal, 2, WHITE)
-    text3 = f.render("%4d combo  " % self.combo, 2, WHITE)
+    text1 = f.render("%4d lines  " % self.info.lineTot, 2, WHITE)
+    text2 = f.render("%4d attack " % self.info.atkTot, 2, WHITE)
+    text3 = f.render("%4d combo  " % self.info.combo, 2, WHITE)
     text4 = f.render(self.getClearDescription(self.lineClear, self.tSpinDisplay), 2, WHITE)
     w1, h1 = text1.get_size()
     w2, h2 = text2.get_size()
@@ -226,15 +221,11 @@ class Field:
           self.pattern[x][y] = self.mino.pattern
     self.lineClear = self.clearAllLine()
     self.tSpinDisplay = self.tSpin
-    attack, self.b2b = self.sendAttack(self.lineClear, self.tSpinDisplay, self.b2b, self.combo)
-    self.lineTotal += self.lineClear
-    self.attackTotal += attack
+    atk = self.info.updateAndGetAtk(self.lineClear, self.tSpinDisplay)
     if self.lineClear == 0:
-      self.combo = 0
       self.clearAttack()
     else:
-      self.combo += 1
-      self.cancelAttack(attack)
+      self.cancelAttack(atk)
     self.mino = self.pop_nextmino()
     self.holdflag = True
     # check game over
@@ -313,39 +304,6 @@ class Field:
         self.atk_buffer.append(atk - val)
         val = 0
     return val
-
-  # send attack
-  def sendAttack(self, line, tspin, b2b, combo):
-    # not T-spin
-    if not tspin:
-      if   line == 0: atk, b2b = 0, b2b
-      elif line == 1: atk, b2b = 0, False
-      elif line == 2: atk, b2b = 1, False
-      elif line == 3: atk, b2b = 2, False
-      elif line == 4:
-        if b2b: atk, b2b = 5, True
-        else:   atk, b2b = 4, True
-      else: assert False, "line clear out of bound"
-    # T-spin
-    else:
-      if   line == 0: atk, b2b = 0, b2b
-      elif line == 1:
-        if b2b: atk, b2b = 3, True
-        else:   atk, b2b = 2, True
-      elif line == 2:
-        if b2b: atk, b2b = 5, True
-        else  : atk, b2b = 4, True
-      elif line == 3:
-        if b2b: atk, b2b = 8, True
-        else  : atk, b2b = 6, True
-      else: assert False, "line clear out of bound"
-    # combo
-    if combo <= 1: atk += 0
-    elif combo <= 3: atk += 1
-    elif combo <= 5: atk += 2
-    elif combo <= 7: atk += 3
-    else: atk += 4
-    return atk, b2b
 
   # line clear description string
   def getClearDescription(self, line, tspin):
