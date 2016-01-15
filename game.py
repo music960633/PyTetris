@@ -2,9 +2,9 @@ import pygame
 import random
 import sys
 from pygame.locals import *
-from field import *
+from field import Field
 from defines import *
-from key import *
+from key import KeyHandler
 
 class Game:
   def __init__(self):

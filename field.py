@@ -1,6 +1,7 @@
 import pygame
-from mino import *
-from util import *
+from mino import Mino, Generator
+from util import make_surface, add_frame, find_center
+from defines import *
 
 '''   class Field definition   '''
 class Field:

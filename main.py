@@ -1,8 +1,8 @@
 import sys
 import pygame
 from pygame.locals import *
-from game import *
-from menu import *
+from game import Game1P, Game1PInvisible, Game1PDig, Game1P4W
+from menu import Menu
 from defines import *
 
 def main():
