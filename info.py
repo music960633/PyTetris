@@ -4,7 +4,7 @@ class GameInfo:
     self.lineTot = 0
     self.atkTot  = 0
     self.combo   = 0
-    self.b2b     = True
+    self.b2b     = False
 
   def updateAndGetAtk(self, line, tspin):
     atk = self.calcAtk(line, tspin)
