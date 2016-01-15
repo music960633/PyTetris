@@ -47,7 +47,7 @@ class Game:
       elif key == K_q     : quit = True
     return quit, restart
 
-class Game1P(Game):
+class Game1pNormal(Game):
   def __init__(self):
     Game.__init__(self)
     self.counter = 0
@@ -67,7 +67,7 @@ class Game1P(Game):
         if restart: break
 
 
-class Game1PInvisible(Game):
+class Game1pInvisible(Game):
   def __init__(self):
     Game.__init__(self)
     self.field = Field(10, 20, invisible = True)
@@ -86,7 +86,7 @@ class Game1PInvisible(Game):
         if quit: return
         if restart: break
 
-class Game1PDig(Game):
+class Game1pDig(Game):
   def __init__(self):
     Game.__init__(self)
     self.counter = 0
@@ -119,7 +119,7 @@ class Game1PDig(Game):
         if quit: return
         if restart: break
 
-class Game1P4W(Game):
+class Game1p4wide(Game):
   def __init__(self):
     Game.__init__(self)
     self.field = Field(4, 20)

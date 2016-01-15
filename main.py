@@ -1,7 +1,7 @@
 import sys
 import pygame
 from pygame.locals import *
-from game import Game1P, Game1PInvisible, Game1PDig, Game1P4W
+from game import Game1pNormal, Game1pInvisible, Game1pDig, Game1p4wide
 from menu import Menu
 from defines import *
 
@@ -16,13 +16,13 @@ def main():
 def build_menu():
   # 1P menu
   menu_1P = Menu() 
-  menu_1P.addOption("1P mode with auto attack", Game1P().start)
-  menu_1P.addOption("1P mode with invisible blocks", Game1PInvisible().start)
+  menu_1P.addOption("1P mode with auto attack", Game1pNormal().start)
+  menu_1P.addOption("1P mode with invisible blocks", Game1pInvisible().start)
   
   # practice menu
   menu_prac = Menu()
-  menu_prac.addOption("4-wide practice", Game1P4W().start)
-  menu_prac.addOption("dig challenge", Game1PDig().start)
+  menu_prac.addOption("4-wide practice", Game1p4wide().start)
+  menu_prac.addOption("dig challenge", Game1pDig().start)
 
   # main menu
   menu_main = Menu(isRoot = True)
