@@ -7,11 +7,11 @@ from defines import *
 from key import KeyHandler
 
 class Game:
-  def __init__(self):
+  def __init__(self, canhold, table, numpack, next_size):
     self.screen = pygame.display.get_surface()
     self.clock = pygame.time.Clock()
     # default: standard
-    self.field = Field(10, 20)
+    self.field = Field(10, 20, canhold=canhold, table=table, numpack=numpack, next_size=next_size)
     self.initKeyHandler()
 
   def initKeyHandler(self):
@@ -48,8 +48,8 @@ class Game:
     return quit, restart
 
 class Game1pNormal(Game):
-  def __init__(self):
-    Game.__init__(self)
+  def __init__(self, canhold=True, table='SRS', numpack=1, next_size=5):
+    Game.__init__(self, canhold, table, numpack, next_size)
     self.counter = 0
     
   def start(self):
@@ -68,8 +68,8 @@ class Game1pNormal(Game):
 
 
 class Game1pInvisible(Game):
-  def __init__(self):
-    Game.__init__(self)
+  def __init__(self, canhold=True, table='SRS', numpack=1, next_size=5):
+    Game.__init__(self, canhold, table, numpack, next_size)
     self.field = Field(10, 20, invisible = True)
     
   def start(self):
@@ -87,14 +87,14 @@ class Game1pInvisible(Game):
         if restart: break
 
 class Game1pDig(Game):
-  def __init__(self):
-    Game.__init__(self)
-    self.counter = 0
+  def __init__(self, canhold=True, table='SRS', numpack=1, next_size=5):
+    Game.__init__(self, canhold, table, numpack, next_size)
     
   def start(self):
     while True:
       # restart
       self.field.restart()
+      self.counter = 0
       threshold = 300
       accumulate = 0
       while True:
@@ -102,14 +102,9 @@ class Game1pDig(Game):
         self.counter += 1
         if self.counter > threshold and not self.field.gameover:
           self.field.recieveAttack(1)
+          self.field.clearAttack()
           self.counter = 0
           accumulate += 1
-        # decrease threshold
-        if accumulate == 2:
-          accumulate = 0
-          threshold -= 10
-          if threshold < 5:
-            threshold = 5
         # display
         self.screen.fill(BLACK)
         self.screen.blit(self.field.draw(), (20, 20))
@@ -119,9 +114,10 @@ class Game1pDig(Game):
         if quit: return
         if restart: break
 
+
 class Game1p4wide(Game):
-  def __init__(self):
-    Game.__init__(self)
+  def __init__(self, canhold=True, table='SRS', numpack=1, next_size=5):
+    Game.__init__(self, canhold, table, numpack, next_size)
     self.field = Field(4, 20)
 
   def start(self):

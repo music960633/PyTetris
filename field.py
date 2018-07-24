@@ -7,16 +7,19 @@ from defines import *
 
 '''   class Field definition   '''
 class Field:
-  def __init__(self, width, height, invisible = False):
+  def __init__(self, width, height, canhold=True, table='SRS', numpack=1, next_size=5, invisible=False):
     # width and height
     self.width  = width
     self.height = height
+    self.canhold = canhold
+    self.table = table
+    self.numpack = numpack
     # stacked piece invisible
     self.invisible = invisible
     # initial position of a piece
     self.mino_initpos = (self.width/2-1, self.height-1)
     # size of next queue
-    self.next_size = 5
+    self.next_size = next_size
 
     self.restart()
 
@@ -28,7 +31,7 @@ class Field:
     # gameover flag
     self.gameover = False
     # mino pack generator
-    self.generator = Generator()
+    self.generator = Generator(self.table, self.numpack)
     # next queue
     self.nextminos = [self.generator.next_mino() for x in range(self.next_size)]
     # current piece
@@ -236,7 +239,7 @@ class Field:
   # hold the mino
   def holdMino(self):
     if self.gameover: return
-    if self.holdflag == True:
+    if self.canhold and self.holdflag:
       tmp = self.hold
       self.hold = self.mino
       self.hold.moveto((0, 0))

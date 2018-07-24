@@ -23,6 +23,7 @@ def build_menu():
   menu_prac = Menu()
   menu_prac.addOption("4-wide practice", Game1p4wide().start)
   menu_prac.addOption("dig challenge", Game1pDig().start)
+  menu_prac.addOption("dig challenge (classic)", Game1pDig(False, 'classic', 1000, 1).start)
 
   # main menu
   menu_main = Menu(isRoot = True)

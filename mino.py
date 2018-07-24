@@ -69,6 +69,14 @@ class Mino:
     while mino.move((0, -1), field): pass
     return mino
 
+
+'''   No spin tables   '''
+NOSPIN = \
+( \
+  ([(0, 0)], [(0, 0)], [(0, 0)], [(0, 0)]),
+  ([(0, 0)], [(0, 0)], [(0, 0)], [(0, 0)])
+)
+
 '''   SRS tables   '''
 # table for T, J, L, S, Z
 SRS_TJLSZ = \
@@ -108,7 +116,7 @@ SRS_I = \
 )
 
 '''   functions that generate different Minos   '''
-def Mino_I(center):
+def Mino_I(center, table='SRS'):
   return Mino(                                        \
     center      = center,                             \
     pos         = [(-1, 0), (0, 0), (1, 0), (2, 0)],  \
@@ -116,10 +124,10 @@ def Mino_I(center):
     orientation = 0,                                  \
     turn_enable = True,                               \
     turn_center = ((1, 0), (0, -1)),                  \
-    turn_table  = SRS_I,                              \
+    turn_table  = SRS_I if table == 'SRS' else NOSPIN,\
     pattern     = make_surface(CYAN)                  \
 )
-def Mino_O(center):
+def Mino_O(center, table='SRS'):
   return Mino(                                        \
     center      = center,                             \
     pos         = [(0, 0), (0, 1), (1, 0), (1, 1)],   \
@@ -130,7 +138,7 @@ def Mino_O(center):
     turn_table  = None,                               \
     pattern     = make_surface(YELLOW)                \
 )
-def Mino_T(center):
+def Mino_T(center, table='SRS'):
   return Mino(                                        \
     center      = center,                             \
     pos         = [(-1, 0), (0, 0), (1, 0), (0, 1)],  \
@@ -138,10 +146,10 @@ def Mino_T(center):
     orientation = 0,                                  \
     turn_enable = True,                               \
     turn_center = ((0, 0), (0, 0)),                   \
-    turn_table  = SRS_TJLSZ,                          \
+    turn_table  = SRS_TJLSZ if table == 'SRS' else NOSPIN,\
     pattern     = make_surface(MAGENTA)               \
 )
-def Mino_J(center):
+def Mino_J(center, table='SRS'):
   return Mino(                                        \
     center      = center,                             \
     pos         = [(-1, 1), (-1, 0), (0, 0), (1, 0)], \
@@ -149,10 +157,10 @@ def Mino_J(center):
     orientation = 0,                                  \
     turn_enable = True,                               \
     turn_center = ((0, 0), (0, 0)),                   \
-    turn_table  = SRS_TJLSZ,                          \
+    turn_table  = SRS_TJLSZ if table == 'SRS' else NOSPIN,\
     pattern     = make_surface(BLUE)                  \
 )
-def Mino_L(center):
+def Mino_L(center, table='SRS'):
   return Mino(                                        \
     center      = center,                             \
     pos         = [(-1, 0), (0, 0), (1, 0), (1, 1)],  \
@@ -160,10 +168,10 @@ def Mino_L(center):
     orientation = 0,                                  \
     turn_enable = True,                               \
     turn_center = ((0, 0), (0, 0)),                   \
-    turn_table  = SRS_TJLSZ,                          \
+    turn_table  = SRS_TJLSZ if table == 'SRS' else NOSPIN,\
     pattern     = make_surface(ORANGE)                \
 )
-def Mino_S(center):
+def Mino_S(center, table='SRS'):
   return Mino(                                        \
     center      = center,                             \
     pos         = [(-1, 0), (0, 0), (0, 1), (1, 1)],  \
@@ -171,10 +179,10 @@ def Mino_S(center):
     orientation = 0,                                  \
     turn_enable = True,                               \
     turn_center = ((0, 0), (0, 0)),                   \
-    turn_table  = SRS_TJLSZ,                          \
+    turn_table  = SRS_TJLSZ if table == 'SRS' else NOSPIN,\
     pattern     = make_surface(RED)                   \
 )
-def Mino_Z(center):
+def Mino_Z(center, table='SRS'):
   return Mino(                                        \
     center      = center,                             \
     pos         = [(-1, 1), (0, 1), (0, 0), (1, 0)],  \
@@ -182,7 +190,7 @@ def Mino_Z(center):
     orientation = 0,                                  \
     turn_enable = True,                               \
     turn_center = ((0, 0), (0, 0)),                   \
-    turn_table  = SRS_TJLSZ,                          \
+    turn_table  = SRS_TJLSZ if table == 'SRS' else NOSPIN,\
     pattern     = make_surface(GREEN)                 \
 )
 
@@ -190,16 +198,18 @@ def Mino_Z(center):
 '''   class Generator definition   '''
 # mino pack generator
 class Generator:
-  def __init__(self):
+  def __init__(self, table='SRS', numpack=1):
     self.minos = [Mino_I, Mino_O, Mino_T, Mino_J, Mino_L, Mino_S, Mino_Z]
+    self.table = table
+    self.numpack = numpack
     self.reset()
 
   def reset(self):
-    self.idx = [x for x in range(len(self.minos))]
+    self.idx = [x for x in range(len(self.minos) * self.numpack)]
     random.shuffle(self.idx)
 
   def next_mino(self, center = (0, 0)):
-    mino = self.minos[self.idx[0]](center)
+    mino = self.minos[self.idx[0] % len(self.minos)](center, self.table)
     self.idx = self.idx[1:]
     if len(self.idx) == 0:
       self.reset()
